@@ -1,5 +1,4 @@
 # MeterRadioBridge — instrukcja obsługi
-Skaner i dekoder radiowych liczników · wM-Bus 868 MHz
 
 Gratulacje! Trzymasz w ręku **MeterRadioBridge** — gotowe urządzenie do
 **nasłuchiwania radiowych liczników** (wodomierzy, ciepłomierzy, gazomierzy,
@@ -409,24 +408,37 @@ zmieniają się wartości (to bardzo pomaga w odgadnięciu, który bajt jest lic
 > Jeśli `meterradiobridge.local` nie działa, użyj adresu IP urządzenia (lista klientów
 > routera albo Ustawienia). Gdy ustawiłeś hasło panelu, dodaj `-u użytkownik:hasło`.
 
-### Co i komu wysłać
+### Gdzie zgłosić — załóż issue na GitHubie
 
-Skompletuj: **ramki hex / plik `ramki.json`** + **odczyt z tarczy z datą** +
-**model licznika** (+ ewentualnie klucz). Wyślij na kanał kontaktowy podany przez
-sprzedawcę:
+Zgłoszenia o nieczytających się / nierozpoznanych licznikach przyjmujemy jako
+**issue** w publicznym repozytorium projektu:
 
-> ✉️ **Kontakt:** Załóż issue w tym repozytorium.
+> 🐙 **[github.com/jchrzaniuk/MeterRadioBridge/issues](https://github.com/jchrzaniuk/MeterRadioBridge/issues)**
+> → przycisk **New issue**. Potrzebne jest darmowe konto GitHub.
 
-### Prywatność — zanim wyślesz
+W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
+
+1. **Ramki hex** — wklej zawartość pliku `ramki.json` albo same wartości `raw_hex`
+   (możesz w bloku kodu \`\`\` … \`\`\`).
+2. **Odczyt z tarczy** licznika **+ data i godzina** odczytu.
+3. **Model licznika** z naklejki: producent, model, numer seryjny.
+4. *(opcjonalnie)* **klucz AES**, jeśli licznik jest zaszyfrowany — patrz uwaga
+   o prywatności niżej (issue jest **publiczne**, więc klucza i numeru seryjnego
+   nie podawaj, jeśli traktujesz je jako wrażliwe).
+
+### Prywatność — zanim założysz issue
+
+> ⚠️ **Issue na GitHubie jest PUBLICZNE** — widzi je każdy. Wszystko, co tam
+> wkleisz, staje się jawne. Przemyśl to:
 
 - **Ramka nieszyfrowana** zawiera **bieżący odczyt** Twojego licznika (zużycie).
-  Jeśli to dane wrażliwe — wyślij tylko zaufanemu odbiorcy.
-- **Klucz AES** to sekret Twojego licznika. Podawaj go **tylko jeśli chcesz**
-  i tylko zaufanemu deweloperowi — pozwala odczytać wszystkie transmisje tego
-  licznika. Bez klucza też pomożesz (ramka + model), choć dekoder powstaje szybciej
-  z kluczem.
-- Numer licznika i seryjny bywają widoczne na rachunku — zwykle dane jawne,
-  ale decyzja należy do Ciebie.
+  Jeśli traktujesz to jako dane wrażliwe — rozważ, zanim wkleisz publicznie.
+- **Klucza AES NIE wklejaj do publicznego issue.** To sekret Twojego licznika —
+  pozwala odczytać wszystkie jego transmisje. Bez klucza też pomożesz (ramka +
+  model i odczyt z tarczy). Jeśli dekoder będzie wymagał klucza, poprosimy
+  o przesłanie go **kanałem prywatnym** (np. wiadomość prywatna na GitHubie).
+- **Numer seryjny** bywa wrażliwy — możesz go pominąć lub zamazać; producent
+  i model wystarczą do rozpoznania.
 
 > 🙌 Dzięki takim zgłoszeniom lista wspieranych liczników rośnie. Każdy nowy,
 > potwierdzony odczytem z tarczy egzemplarz trafia do testów i zostaje wsparty
