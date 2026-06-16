@@ -18,15 +18,17 @@ robisz przez przeglądarkę.
 
 ## 1. Co będzie potrzebne
 
-- Urządzenie (moduł XIAO ESP32-S3 + radio Wio-SX1262 z anteną).
+- Urządzenie **MeterRadioBridge** — kompletne, w obudowie, z dołączoną anteną
+  (dostajesz gotowy produkt, nie osobne moduły do złożenia).
 - Zasilanie **USB-C** (ładowarka telefonu 5 V lub port USB komputera).
 - Telefon lub komputer z Wi-Fi i przeglądarką.
 - Twoja domowa sieć **Wi-Fi 2,4 GHz** (urządzenie nie obsługuje 5 GHz).
 - *Opcjonalnie:* klucze AES-128 do Twoich liczników (jeśli nadają zaszyfrowane)
   — dostajesz je od dostawcy/administratora liczników.
 
-> 📡 **Antena**: upewnij się, że antena jest przykręcona przed włączeniem.
-> Zasięg jest najlepszy, gdy urządzenie stoi centralnie, z dala od dużych metali.
+> 📡 **Antena**: upewnij się, że antena jest dokręcona przed włączeniem.
+> Zasięg jest najlepszy, gdy urządzenie stoi centralnie, z dala od powierzchni
+> metalowych.
 
 ---
 
@@ -333,7 +335,7 @@ ręcznego. Daje tę samą ochronę bez wystawiania kluczy poza urządzenie.
 
 ### Factory reset (przywrócenie ustawień fabrycznych)
 Gdy chcesz wyczyścić wszystko (np. zapomniane hasło panelu): **przytrzymaj
-przycisk użytkownika (user button) na module przez ok. 5 sekund**. Skasuje to
+przycisk użytkownika (user button) na urządzeniu przez ok. 5 sekund**. Skasuje to
 wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
 `MeterRadioBridge-Setup` jak przy pierwszym uruchomieniu.
 
@@ -350,7 +352,7 @@ wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
 | Nie pamiętam hasła do panelu | Zrób **factory reset** przyciskiem (5 s) i skonfiguruj od nowa. |
 | Nie mogę zaktualizować firmware / wyeksportować konfiguracji (błąd 403) | Te funkcje **wymagają ustawionego hasła panelu** — ustaw je w *Ustawienia → Dostęp do panelu* i spróbuj ponownie. |
 | „Za dużo prób logowania" (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
-| Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od metalu i innych nadajników. |
+| Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
 | Zgubiłem Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
 
 ---
@@ -455,7 +457,74 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 
 ---
 
-## 10. Słowniczek
+## 10. Wspierane liczniki (sterowniki)
+
+Urządzenie ma wbudowany zestaw **sterowników** rozpoznających liczniki różnych
+producentów. Dla większości standardowych liczników wystarcza **auto (generyczny
+DIF/VIF)** — konkretny sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto"
+nie pokazuje sensownych wartości (sekcja 4 → *Sterownik*). Pełną, aktualną listę
+masz zawsze w panelu (pole *Sterownik*) oraz pod `GET /api/drivers`.
+
+Sterowniki w podziale na **mierzone medium** (pogrubione = rodziny potwierdzone na
+realnych licznikach):
+
+### 💧 Woda (wodomierze)
+| Sterownik | Producent / linia |
+|---|---|
+| **`mkradio3`, `mkradio3a`, `mkradio4`, `mkradio4a`** | Techem MK Radio 3/4 |
+| **`izar`** | Diehl / IZAR / Sappel / Hydrometer (PRIOS, nieszyfrowany) |
+| **`apator162`, `apatorna1`** | Apator |
+| `multical21` | Kamstrup |
+| `minomess` | Minol |
+| `supercom587`, `sensusrf95` | Sensus |
+| `qwater` | Qundis |
+| `istameter` | ista |
+
+### 🔥 Ciepło (ciepłomierze)
+| Sterownik | Producent / linia |
+|---|---|
+| **`compact5`, `vario451`** | Techem |
+| **`apator172`** | Apator |
+| `multical302` | Kamstrup |
+| `landisgyrus450`, `ultraheat` | Landis+Gyr / Sensus |
+| `qheat` | Qundis |
+| `wme5` | ciepłomierz ultradźwiękowy |
+
+### 🌡️ Podzielniki kosztów ciepła (HCA)
+| Sterownik | Producent / linia |
+|---|---|
+| **`fhkvdataiii`, `fhkvdataiv`** | Techem FHKV |
+| **`bfw240radio`** | Brunata |
+| `apatoreitn` | Apator |
+| `qcaloric` | Qundis |
+| `sontex868` | Sontex |
+
+### ⚡ Energia elektryczna
+| Sterownik | Producent / linia |
+|---|---|
+| **`amiplus`** | Iskra / Apator (np. Otus3) |
+| `omnipower` | Kamstrup |
+| `abb` | ABB |
+| `emhelectric` | EMH |
+| `esyswm` | EasyMeter |
+| `elster` | Elster / Honeywell |
+| `siemens` | Siemens |
+
+### 🟡 Gaz (gazomierze)
+| Sterownik | Producent / linia |
+|---|---|
+| `apator08` | Apator |
+| `aerius` | gazomierz radiowy |
+
+> Część liczników (np. Diehl/Sappel oraz wodne Apatora) nadaje **nieszyfrowane**
+> mimo własnościowego formatu — urządzenie odczyta je **bez klucza**. Pozostałe
+> wymagają **klucza AES** (kłódka 🔒). Lista wspieranych modeli rośnie z każdą
+> aktualizacją firmware — jeśli Twojego licznika brakuje, patrz sekcja 8
+> („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
+
+---
+
+## 11. Słowniczek
 
 - **wM-Bus** — radiowy standard liczników mediów (woda, ciepło, gaz) na 868 MHz.
 - **T1 / C1** — warianty trybu nadawania liczników. Większość używa T1.
