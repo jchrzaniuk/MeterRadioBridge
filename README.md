@@ -243,13 +243,11 @@ curl http://meterradiobridge.local/api/status
 ```
 
 ### Radio (tryb nasłuchu)
-Dobierz do tego, jak nadają Twoje liczniki:
-- **T1 (stały) — zalecane** — najczęstszy tryb liczników jednokierunkowych.
-- **C1 (stały)** — dla liczników nadających w trybie C1.
-- **Hop T1 ↔ C1** — naprzemiennie oba tryby, gdy masz mieszankę (kosztem części
-  ramek — urządzenie część czasu słucha „nie tam").
-
-Jeśli nie wiesz — zostaw **T1**. Gdy brakuje jakiegoś licznika, spróbuj C1 lub Hop.
+**T1 + C1 (868.95 MHz) — automatycznie.** Tryby T1 i C1 nadają na tej samej
+częstotliwości (różni je tylko sposób kodowania), więc urządzenie nasłuchuje
+ich **jednocześnie** i samo rozpoznaje tryb każdej odebranej ramki. Nie musisz
+nic wybierać ani przełączać — liczniki T1 (np. wodomierze) i C1 (np. podzielniki
+ciepła Qundis) są łapane razem, bez utraty ramek.
 
 ### Alerty MQTT
 - **Alert „licznik zaginął" — godziny** — po ilu godzinach ciszy wysłać alert,
@@ -345,7 +343,7 @@ wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
 
 | Problem | Co zrobić |
 |---|---|
-| Nie widzę żadnych liczników | Daj kilka–kilkanaście minut (niektóre liczniki nadają rzadko, nawet raz na godzinę). Sprawdź antenę i ustaw urządzenie bliżej liczników. Spróbuj trybu **C1** lub **Hop**. |
+| Nie widzę żadnych liczników | Daj kilka–kilkanaście minut (niektóre liczniki nadają rzadko, nawet raz na godzinę). Sprawdź, czy antena jest dokręcona, i ustaw urządzenie bliżej liczników. T1 i C1 są nasłuchiwane jednocześnie — trybu nie trzeba zmieniać. |
 | Licznik widoczny, ale bez odczytów, z kłódką 🔒 | Jest zaszyfrowany — wpisz **Klucz AES-128** w jego konfiguracji. |
 | Wartości wyglądają bez sensu | Zmień **Sterownik** z „auto" na właściwy dla producenta, albo sprawdź **Typ urządzenia**. |
 | `meterradiobridge.local` nie otwiera się | Wejdź po adresie IP urządzenia (znajdziesz go na liście klientów routera). |
@@ -527,7 +525,8 @@ realnych licznikach):
 ## 11. Słowniczek
 
 - **wM-Bus** — radiowy standard liczników mediów (woda, ciepło, gaz) na 868 MHz.
-- **T1 / C1** — warianty trybu nadawania liczników. Większość używa T1.
+- **T1 / C1** — warianty trybu nadawania liczników; oba na 868.95 MHz, łapane
+  jednocześnie. T1 to najczęstszy tryb wodomierzy, C1 m.in. podzielniki Qundis.
 - **AES-128** — szyfrowanie transmisji; klucz to 32 znaki szesnastkowe.
 - **Sterownik (driver)** — sposób interpretacji danych konkretnego producenta.
 - **RSSI** — siła odbieranego sygnału w dBm (bliżej 0 = mocniejszy).
