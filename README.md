@@ -115,6 +115,30 @@ Przy każdym liczniku zobaczysz:
 Kliknij licznik, żeby otworzyć jego szczegóły: aktualny odczyt, zużycie,
 ostatnie pomiary i zakres min–max, a niżej **konfigurację**.
 
+### Numer licznika a jego zapis w telegramie
+Panel i logi pokazują numer licznika **normalnie** — tak, jak czytasz go z
+tarczy. Ale jeśli zajrzysz w **surową ramkę** (hex w zakładce „Logi" lub przy
+analizie), ten sam numer wygląda inaczej: jest zapisany **bajtami w odwrotnej
+kolejności** (kodowanie BCD, little-endian). To normalne dla wM-Bus, nie błąd.
+
+Numer dzieli się na pary cyfr (bajty), a w telegramie idą one **od końca**:
+
+```
+numer na liczniku:   12 34 56 78
+w surowej ramce:     78 56 34 12
+```
+
+Żeby odczytać numer z ramki, robisz to samo wstecz — bierzesz cztery bajty
+adresu i odwracasz ich kolejność. Urządzenie robi to za Ciebie, więc na liście
+i w odczytach masz już numer w czytelnej postaci; odwrócony zapis zobaczysz tylko
+patrząc bezpośrednio w bajty telegramu.
+
+> Drobiazg na później: u niektórych liczników za nadawanie odpowiada osobny
+> moduł radiowy z własnym numerem — wtedy na liście jako `id` widać numer
+> nadajnika, a numer z tarczy bywa przenoszony **w środku** telegramu (firmware
+> pokazuje go w logach jako „↳ licznik …"). Jeśli numery się nie zgadzają, to
+> może być właśnie ten przypadek — porównaj, zanim uznasz licznik za obcy.
+
 ### Konfiguracja licznika
 
 W szczegółach licznika (lub przyciskiem **+ Dodaj licznik**, jeśli chcesz dodać
@@ -527,6 +551,9 @@ realnych licznikach):
 - **wM-Bus** — radiowy standard liczników mediów (woda, ciepło, gaz) na 868 MHz.
 - **T1 / C1** — warianty trybu nadawania liczników; oba na 868.95 MHz, łapane
   jednocześnie. T1 to najczęstszy tryb wodomierzy, C1 m.in. podzielniki Qundis.
+- **id (adres nadawcy)** — numer identyfikujący nadawcę w telegramie. Zwykle
+  równy numerowi na liczniku; gdy nadaje osobny moduł radiowy, to numer modułu,
+  a numer z tarczy bywa w środku telegramu (patrz „↳ licznik" / `tplid`).
 - **AES-128** — szyfrowanie transmisji; klucz to 32 znaki szesnastkowe.
 - **Sterownik (driver)** — sposób interpretacji danych konkretnego producenta.
 - **RSSI** — siła odbieranego sygnału w dBm (bliżej 0 = mocniejszy).
