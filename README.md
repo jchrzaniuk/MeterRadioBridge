@@ -482,67 +482,66 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 ## 10. Wspierane liczniki (sterowniki)
 
 Urządzenie ma wbudowany zestaw **sterowników** rozpoznających liczniki różnych
-producentów. Dla większości standardowych liczników wystarcza **auto (generyczny
-DIF/VIF)** — konkretny sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto"
-nie pokazuje sensownych wartości (sekcja 4 → *Sterownik*). Pełną, aktualną listę
-masz zawsze w panelu (pole *Sterownik*) oraz pod `GET /api/drivers`.
+producentów. Dla większości standardowych liczników (Kamstrup, Landis+Gyr, Sensus,
+Diehl i inne nadające zgodnie z normą EN 13757) wystarcza **auto (generyczny
+DIF/VIF)** — po odszyfrowaniu czyta je bez dedykowanego sterownika. Konkretny
+sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto" nie pokazuje sensownych
+wartości (sekcja 4 → *Sterownik*). Pełną, aktualną listę masz zawsze w panelu (pole
+*Sterownik*) oraz pod `GET /api/drivers`.
 
-Sterowniki w podziale na **mierzone medium** (pogrubione = rodziny potwierdzone na
-realnych licznikach):
+Poniżej **dedykowane sterowniki** do formatów własnościowych (gdzie sam EN nie
+wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych licznikach.**
+🔒 = wymaga klucza AES licznika (od dostawcy/administratora).
 
 ### 💧 Woda (wodomierze)
-| Sterownik | Producent / linia |
-|---|---|
-| **`mkradio3`, `mkradio3a`, `mkradio4`, `mkradio4a`** | Techem MK Radio 3/4 |
-| **`izar`** | Diehl / IZAR / Sappel / Hydrometer (PRIOS, nieszyfrowany) |
-| **`apator162`, `apatorna1`** | Apator |
-| `multical21` | Kamstrup |
-| `minomess` | Minol |
-| `supercom587`, `sensusrf95` | Sensus |
-| `qwater` | Qundis |
-| `istameter` | ista |
+| Sterownik | Producent / linia | Klucz |
+|---|---|---|
+| **`mkradio3`, `mkradio3a`, `mkradio4`, `mkradio4a`** | Techem MK Radio 3/4 | bez klucza |
+| **`izar`** | Diehl / IZAR / Sappel / Hydrometer (PRIOS) | bez klucza |
+| **`apator162`, `apatorna1`** | Apator (wodomierze) | bez klucza (auto) |
+| **`apator172`** | Apator AT-WMBUS-17-2 (nakładka JS-02 Smart+/C+) | zależnie od nakładki |
+| **`iperl`** | Sensus iPerl | klucz fabryczny (wbudowany) |
+| **`hydrus`** | Diehl Hydrus | 🔒 |
+| **`bmt`** | BMeters Hydrodigit | bez klucza (auto) |
+| `istawater` | ista | 🔒 |
 
 ### 🔥 Ciepło (ciepłomierze)
-| Sterownik | Producent / linia |
-|---|---|
-| **`compact5`, `vario451`** | Techem |
-| **`apator172`** | Apator |
-| `multical302` | Kamstrup |
-| `landisgyrus450`, `ultraheat` | Landis+Gyr / Sensus |
-| `qheat` | Qundis |
-| `wme5` | ciepłomierz ultradźwiękowy |
+| Sterownik | Producent / linia | Klucz |
+|---|---|---|
+| **`compact5`, `vario451`** | Techem | bez klucza |
+| **`sharky`** | Diehl Sharky | klucz fabryczny |
+| **`bmt`** | BMeters | bez klucza |
+| standard EN | Techem / Landis+Gyr (OEM) | jawne: bez; szyfrowane: 🔒 |
 
 ### 🌡️ Podzielniki kosztów ciepła (HCA)
-| Sterownik | Producent / linia |
-|---|---|
-| **`fhkvdataiii`, `fhkvdataiv`** | Techem FHKV |
-| **`bfw240radio`** | Brunata |
-| `apatoreitn` | Apator |
-| `qcaloric` | Qundis |
-| `sontex868` | Sontex |
+| Sterownik | Producent / linia | Klucz |
+|---|---|---|
+| **`fhkvdataiii`, `fhkvdataiv`** | Techem FHKV | iii: bez; iv: 🔒 |
+| **`bfw240radio`** | BFW (podzielnik radiowy) | bez klucza |
+| **`qcaloric`** | Qundis (kompakt CI=0x72; Caloric 5.5) | bez klucza |
 
 ### ⚡ Energia elektryczna
-| Sterownik | Producent / linia |
-|---|---|
-| **`amiplus`** | Iskra / Apator (np. Otus3) |
-| `omnipower` | Kamstrup |
-| `abb` | ABB |
-| `emhelectric` | EMH |
-| `esyswm` | EasyMeter |
-| `elster` | Elster / Honeywell |
-| `siemens` | Siemens |
+| Sterownik | Producent / linia | Klucz |
+|---|---|---|
+| **`amiplus`** | Iskra IE.5 / Apator / Elgama GAMA | EGM (Tauron/PGE): 🔒 |
+| `omnipower` | Kamstrup OmniPower | 🔒 |
 
-### 🟡 Gaz (gazomierze)
-| Sterownik | Producent / linia |
-|---|---|
-| `apator08` | Apator |
-| `aerius` | gazomierz radiowy |
+### 🔥 Gaz (gazomierze)
+| Sterownik | Producent / linia | Klucz |
+|---|---|---|
+| **`unismart`** | Apator UniSmart / Amiteq | bez klucza (auto) |
+| standard EN „1A" | Apator / Apt (jawne) | bez klucza |
 
-> Część liczników (np. Diehl/Sappel oraz wodne Apatora) nadaje **nieszyfrowane**
-> mimo własnościowego formatu — urządzenie odczyta je **bez klucza**. Pozostałe
-> wymagają **klucza AES** (kłódka 🔒). Lista wspieranych modeli rośnie z każdą
-> aktualizacją firmware — jeśli Twojego licznika brakuje, patrz sekcja 8
-> („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
+> **Klucze:** część liczników (Diehl/Sappel PRIOS, wodne Apatora, BMeters, niektóre
+> Techemy) nadaje **nieszyfrowane** mimo własnościowego formatu — urządzenie odczyta
+> je **bez klucza**. Pozostałe wymagają **klucza AES** (🔒), który dostajesz od
+> dostawcy/administratora liczników.
+>
+> **Repeater w sieci?** Urządzenia infrastruktury (np. repeater Fidelix) urządzenie
+> rozpoznaje i oznacza — nie pomyli ich z licznikiem.
+>
+> Lista rośnie z każdą aktualizacją firmware — jeśli Twojego licznika brakuje, patrz
+> sekcja 8 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
 
 ---
 
