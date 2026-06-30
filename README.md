@@ -519,6 +519,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | **`fhkvdataiii`, `fhkvdataiv`** | Techem FHKV | iii: bez; iv: 🔒 |
 | **`bfw240radio`** | BFW (podzielnik radiowy) | bez klucza |
 | **`qcaloric`** | Qundis (kompakt CI=0x72; Caloric 5.5) | bez klucza |
+| **`apatoreitn`** | Apator EITN (podzielnik elektroniczny) | bez klucza |
 
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
@@ -530,6 +531,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
 | **`unismart`** | Apator UniSmart / Amiteq | bez klucza (auto) |
+| **`apator08`** | Apator (gazomierz/wodomierz, format 08) | bez klucza |
 | standard EN „1A" | Apator / Apt (jawne) | bez klucza |
 
 > **Klucze:** część liczników (Diehl/Sappel PRIOS, wodne Apatora, BMeters, niektóre
