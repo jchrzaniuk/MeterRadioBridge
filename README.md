@@ -489,6 +489,31 @@ sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto" nie pokazuje sens
 wartości (sekcja 4 → *Sterownik*). Pełną, aktualną listę masz zawsze w panelu (pole
 *Sterownik*) oraz pod `GET /api/drivers`.
 
+### ✅ Czytane automatycznie (sterownik „auto", bez wyboru)
+
+Liczniki nadające zgodnie z normą **EN 13757** urządzenie czyta **samo**, bez
+wybierania sterownika — jawne od razu, **zaszyfrowane po wpisaniu klucza AES**
+(sekcja 4). Poniżej rodziny i modele potwierdzone, że działają na „auto" (większość
+zweryfikowana realnymi ramkami). To **nie wymaga** żadnego z dedykowanych
+sterowników z dalszej części.
+
+| Medium | Producent / model | Klucz |
+|---|---|---|
+| 💧 Woda | **Minol / Zenner** (Minomess), **Sontex** (Supercom 587), **Qundis / Zenner** (QWater 5.5) | bez klucza |
+| 💧 Woda | Kamstrup, Sensus, Diehl i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
+| 🔥 Ciepło | **Landis+Gyr** (UltraHeat T550 / UH50), **Qundis** (QHeat 5.5) | bez klucza |
+| 🔥 Ciepło | Kamstrup (Multical), Techem / L+G (OEM) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
+| 🔥 Gaz | **Elster / Honeywell**, **Diehl** (Aerius) | bez klucza |
+| ⚡ Energia | **ABB** (B23 / B24) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
+| 🌡️ HCA | **Sontex** (868) | bez klucza |
+
+> Jeśli Twojego producenta nie ma na liście, a licznik nadaje wg EN 13757 (większość
+> nowych liczników radiowych) — i tak zostanie odczytany na „auto". Dedykowane
+> sterowniki poniżej są tylko dla formatów **własnościowych**, gdzie sam EN nie
+> wystarcza.
+
+---
+
 Poniżej **dedykowane sterowniki** do formatów własnościowych (gdzie sam EN nie
 wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych licznikach.**
 🔒 = wymaga klucza AES licznika (od dostawcy/administratora).
