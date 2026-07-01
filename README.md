@@ -507,7 +507,7 @@ sterowników z dalszej części.
 | Medium | Producent / model | Klucz |
 |---|---|---|
 | 💧 Woda | **Minol / Zenner** (Minomess), **Sontex** (Supercom 587), **Qundis / Zenner** (QWater 5.5) | bez klucza |
-| 💧 Woda | Kamstrup, Sensus, Diehl i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
+| 💧 Woda | **Axioma** (Qalcosonic), Kamstrup, Sensus, Diehl i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Ciepło | **Landis+Gyr** (UltraHeat T550 / UH50), **Qundis** (QHeat 5.5) | bez klucza |
 | 🔥 Ciepło | Kamstrup (Multical), Techem / L+G (OEM) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Gaz | **Elster / Honeywell**, **Diehl** (Aerius) | bez klucza |
