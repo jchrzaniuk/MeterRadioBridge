@@ -158,6 +158,13 @@ go ręcznie, zanim się odezwie) ustawiasz:
   nadaje zaszyfrowany (kłódka 🔒). Bez prawidłowego klucza wartości nie zostaną
   odczytane. Przycisk **Usuń zapisany klucz** czyści wcześniej zapisany klucz.
 
+> **Wodomierze Sensus iPerl (i pokrewne Itron)** — na tarczy numer bywa
+> wydrukowany z prefiksem, np. „8 SEN 2086 3703". Do pola **ID licznika** wpisz
+> po prostu osiem cyfr po oznaczeniu „SEN" (tu: `20863703`) — firmware sam
+> dopasuje je do ramki (nie odwracasz bajtów, nie przeliczasz na hex). iPerl ma
+> **wbudowany klucz fabryczny**, więc pola **Klucz AES** nie wypełniasz — licznik
+> czyta się automatycznie (sterownik `iperl`).
+
 Zapisz przyciskiem **Dodaj licznik**. Licznik do usunięcia: **Usuń licznik**.
 
 > 🔑 **Skąd wziąć klucz AES?** Od administratora/dostawcy liczników (spółdzielnia,
