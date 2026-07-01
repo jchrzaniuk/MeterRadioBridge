@@ -534,7 +534,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | **`apator_water_b6`** | Apator AT-WMBUS (wodomierz, format 05/07) | bez klucza (auto) |
 | **`apator172`** | Apator AT-WMBUS-17-2 (nakładka JS-02 Smart+/C+) | zależnie od nakładki |
 | **`iperl`** | Sensus iPerl | klucz fabryczny (wbudowany) |
-| **`hydrus`** | Diehl Hydrus | 🔒 |
+| **`hydrus`** | Diehl Hydrus | klucz fabryczny (auto); per-instalacja 🔒 |
 | **`bmt`** | BMeters Hydrodigit | bez klucza (auto) |
 | `istawater` | ista | 🔒 |
 
