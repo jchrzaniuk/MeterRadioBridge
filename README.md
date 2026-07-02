@@ -543,7 +543,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 |---|---|---|
 | **`compact5`, `vario451`** | Techem | bez klucza |
 | **`sharky`** | Diehl Sharky | klucz fabryczny |
-| **`bmt`** | BMeters | bez klucza |
+| **`bmt`** | BMeters (Hydrocal M3) | bez klucza |
 | standard EN | Techem / Landis+Gyr (OEM) | jawne: bez; szyfrowane: 🔒 |
 
 ### 🌡️ Podzielniki kosztów ciepła (HCA)
