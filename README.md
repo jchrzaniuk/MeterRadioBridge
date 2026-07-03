@@ -139,6 +139,72 @@ patrząc bezpośrednio w bajty telegramu.
 > pokazuje go w logach jako „↳ licznik …"). Jeśli numery się nie zgadzają, to
 > może być właśnie ten przypadek — porównaj, zanim uznasz licznik za obcy.
 
+### Wodomierze Techem — dwie ramki z jednego licznika
+
+Wodomierze **Techem** to najczęstszy przypadek, w którym jeden licznik nadaje
+**dwie różne ramki**: jedną **niekodowaną** (jawną) i jedną **zaszyfrowaną**.
+Nie jest to błąd ani duplikat — to dwa równoległe „światy" tego samego modułu
+radiowego. Warto rozumieć, który numer skąd pochodzi, bo w grę wchodzą **trzy**
+identyfikatory naraz.
+
+**Trzy numery, które trzeba rozróżnić:**
+
+| Numer | Skąd | Gdzie go widać |
+|---|---|---|
+| **Numer z tarczy** | wydrukowany na liczniku wody | na liście jako `dial` / „numer z tarczy" |
+| **ID modułu radiowego (DLL)** | nadany fabrycznie modułowi-nadajnikowi | na liście jako `id`, adres w nagłówku ramki |
+| — | (payload zaszyfrowany) | niedostępny bez klucza |
+
+Moduł radiowy jest **fizycznie osobnym urządzeniem** doczepionym do wodomierza,
+więc ma **własny numer**, inny niż ten z tarczy. Stąd biorą się dwa numery dla
+jednego licznika.
+
+**Jak wyglądają obie ramki — na Twoich rzeczywistych licznikach:**
+
+```
+                          ┌─ RAMKA NIEKODOWANA (jawna) ────────────────┐
+                          │  tryb T1 · sterownik mkradio3              │
+                          │  adres w ramce = ID MODUŁU                 │
+   Zimna woda             │  NIESIE: odczyt objętości                 │
+   tarcza 35205528  ──────┤  numer z tarczy NIE występuje w tej ramce │
+   moduł  01411489        └───────────────────────────────────────────┘
+                          ┌─ RAMKA KODOWANA (zaszyfrowana) ────────────┐
+                          │  tryb C1 · typ 0x37 „konwerter radiowy"   │
+                          │  adres w ramce = ID MODUŁU (ten sam)      │
+                          │  jawny nagłówek: NUMER Z TARCZY 35205528  │
+                          │  payload: zaszyfrowany (mode 5) 🔒        │
+                          └───────────────────────────────────────────┘
+```
+
+Ten sam schemat dla ciepłej wody: tarcza **34541205** ↔ moduł **10279416**.
+
+**Zależności między numerami — o co tu chodzi:**
+
+- **ID modułu** (`01411489`, `10279416`) to numer, którym licznik przedstawia
+  się w eterze — w **obu** ramkach jest taki sam. To jego adres na liście.
+- **Numer z tarczy** (`35205528`, `34541205`) — ten, który znasz z licznika —
+  **nie pojawia się w ramce jawnej w ogóle**. Występuje **tylko** w jawnym
+  nagłówku ramki zaszyfrowanej. Dlatego urządzenie potrafi go pokazać przy
+  liczniku (para moduł ↔ tarcza), mimo że sam klucz jest nieznany.
+- **Odczyt** (objętość wody) niesie **wyłącznie ramka niekodowana**. To na niej
+  stoi cały odczyt Techema — dlatego liczniki działają automatycznie, sterownik
+  `mkradio3`, **bez żadnego klucza**.
+- **Ramka zaszyfrowana** jest przydatna z jednego powodu: to z niej wyciągamy
+  **numer z tarczy** do sparowania. Co niesie jej payload — nie wiadomo i bez
+  klucza się nie dowiemy (patrz niżej).
+
+> 🔒 **Klucza do ramki Techem nie da się odzyskać.** W odróżnieniu od niektórych
+> liczników z fabrycznym lub uproszczonym kluczem, Techem używa pełnego,
+> losowego klucza per licznik — bruteforce nie wchodzi w grę. Ale nie jest on
+> do niczego potrzebny: **cały odczyt masz z ramki jawnej**. Klucz zmieniłby coś
+> tylko, gdybyś chciał zajrzeć do zaszyfrowanego payloadu, a ten i tak najpewniej
+> powtarza dane, które już widzisz.
+
+> **W skrócie:** jeśli na liście zobaczysz przy jednym wodomierzu Techem numer
+> `id` inny niż numer z tarczy — tak ma być. `id` to moduł radiowy, numer z
+> tarczy urządzenie dokłada z osobnej, rzadszej ramki zaszyfrowanej. Nie kasuj
+> „obcego" licznika, zanim nie sprawdzisz, czy to nie moduł Twojego własnego.
+
 ### Konfiguracja licznika
 
 W szczegółach licznika (lub przyciskiem **+ Dodaj licznik**, jeśli chcesz dodać
