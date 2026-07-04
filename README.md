@@ -299,12 +299,90 @@ pomaga wybrać). Po zmianie urządzenie się zrestartuje.
 ### MQTT (integracja z Home Assistant)
 Pozwala wysyłać odczyty do **Home Assistant** lub innego brokera MQTT.
 - **Włącz MQTT** — przełącznik.
-- **Host / IP**, **Port** (zwykle 1883), **Użytkownik**, **Hasło** — dane brokera.
+- **Host / IP**, **Port** (zwykle 1883; z TLS zwykle 8883), **Użytkownik**, **Hasło** — dane brokera.
+- **TLS / SSL** i **Certyfikat CA (PEM)** — szyfrowanie połączenia, opis niżej.
 - **Prefix** — początek tematów MQTT (np. `wmbus`).
 - **Alerty MQTT** — dodatkowe powiadomienia.
 
 Po włączeniu liczniki z nadaną nazwą pojawią się w Home Assistant automatycznie
 (autodiscovery) jako encje — nie trzeba nic dopisywać w konfiguracji HA.
+
+Zmiany ustawień MQTT stosują się **od razu, bez restartu urządzenia** — mostek
+sam rozłącza się i łączy z nowymi parametrami.
+
+### MQTT po TLS (szyfrowanie i weryfikacja brokera)
+
+Włączenie **TLS / SSL** szyfruje połączenie z brokerem (podsłuch w sieci nie
+zobaczy danych ani hasła MQTT). Przełącznik sam podpowie port **8883**.
+
+Samo szyfrowanie nie sprawdza jednak, **z kim** rozmawiasz. Do tego służy pole
+**Certyfikat CA (PEM)** — wklej tu certyfikat urzędu (CA), który podpisał
+certyfikat Twojego brokera:
+- **broker w chmurze** (np. HiveMQ Cloud) — certyfikat CA znajdziesz
+  w dokumentacji dostawcy;
+- **własny broker** (np. Mosquitto) — plik `ca.crt` z przepisu poniżej.
+
+Z ustawionym CA mostek weryfikuje certyfikat brokera (podpis, adres, daty
+ważności) i **odmówi połączenia z podszywającym się serwerem**. Pod polem
+widać, komu mostek ufa: nazwę CA, wystawcę, datę ważności i **odcisk SHA-256**
+— możesz go porównać z odciskiem na serwerze
+(`openssl x509 -in ca.crt -noout -fingerprint -sha256`).
+
+Zasady pola: puste przy zapisie = zachowaj obecny certyfikat; wklejony tekst =
+ustaw nowy; **Usuń CA** = wróć do samego szyfrowania bez weryfikacji.
+
+> Weryfikacja certyfikatu wymaga poprawnego czasu — urządzenie musi mieć
+> synchronizację NTP (sekcja System pokaże `NTP: ✓ OK`).
+
+#### Własny broker Mosquitto z TLS (przepis)
+
+Na maszynie z brokerem (przykład: Linux, mosquitto 2.x):
+
+```bash
+# 1. Własny urząd (CA) — 10 lat; klucz ca.key trzymaj w tajemnicy
+openssl genrsa -out ca.key 2048
+openssl req -x509 -new -key ca.key -sha256 -days 3650 \
+  -subj "/CN=MQTT-CA-MOJDOM" -out ca.crt
+
+# 2. Certyfikat serwera — w SAN wpisz adresy, którymi łączą się klienci.
+#    WAŻNE: adres IP wpisz DWA razy — jako IP.x ORAZ jako DNS.x. Mostek
+#    (mbedtls w ESP32) porównuje adres wyłącznie z wpisami DNS; bez tego
+#    odrzuci certyfikat („bad certificate" w logu brokera).
+cat > san.cnf <<EOF
+[req]
+distinguished_name = dn
+req_extensions = ext
+prompt = no
+[dn]
+CN = MQTT-MOJDOM
+[ext]
+subjectAltName = @alt
+keyUsage = critical,digitalSignature,keyEncipherment
+extendedKeyUsage = serverAuth
+[alt]
+IP.1  = 192.168.1.100
+DNS.1 = 192.168.1.100
+DNS.2 = localhost
+EOF
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -config san.cnf -out server.csr
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+  -days 3650 -sha256 -extensions ext -extfile san.cnf -out server.crt
+
+# 3. Konfiguracja mosquitto — dodatkowy listener TLS (jawny 1883 może zostać)
+sudo install -m 644 server.crt /etc/mosquitto/certs/
+sudo install -m 640 -g mosquitto server.key /etc/mosquitto/certs/
+sudo tee /etc/mosquitto/conf.d/tls.conf >/dev/null <<EOF
+listener 8883
+certfile /etc/mosquitto/certs/server.crt
+keyfile /etc/mosquitto/certs/server.key
+EOF
+sudo systemctl restart mosquitto
+```
+
+W panelu mostka: **Port** `8883`, **TLS / SSL** włączone, do pola
+**Certyfikat CA (PEM)** wklej zawartość `ca.crt` — i Zapisz. Test z innego
+komputera: `mosquitto_sub -h 192.168.1.100 -p 8883 --cafile ca.crt -v -t 'wmbus/#'`.
 
 ### Webhook
 Wysyła odczyt jako **HTTP POST (JSON)** pod wskazany adres przy każdym pomiarze
@@ -449,6 +527,7 @@ wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
 | „Za dużo prób logowania" (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
 | Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
 | Zgubiłem Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
+| MQTT z TLS nie łączy się (a bez TLS działa) | 1) Sprawdź port (TLS zwykle **8883**). 2) Sprawdź NTP (*System* → `NTP: ✓ OK`) — weryfikacja certyfikatu wymaga poprawnego czasu. 3) Jeśli łączysz się **po adresie IP** z własnym CA: adres musi być w certyfikacie serwera wpisany w SAN **także jako DNS** (patrz przepis w sekcji MQTT po TLS); objaw po stronie brokera to `bad certificate` w logu. 4) Upewnij się, że wkleiłeś CA **brokera**, nie inny certyfikat — pod polem widać nazwę i odcisk zaufanego CA. |
 
 ---
 
