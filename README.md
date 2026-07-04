@@ -237,24 +237,6 @@ Zapisz przyciskiem **Dodaj licznik**. Licznik do usunięcia: **Usuń licznik**.
 > firma rozliczeniowa, producent). Urządzenie samo nie złamie szyfrowania —
 > bez klucza zobaczysz, że licznik istnieje i jak mocny ma sygnał, ale nie odczyty.
 
-### Analiza ramki (przycisk „Analizuj ramkę na wmbusmeters.org")
-
-W szczegółach licznika — gdy urządzenie odebrało już od niego choć jedną
-transmisję — pojawia się przycisk **„Analizuj ramkę na wmbusmeters.org"**.
-Otwiera on w nowej karcie zewnętrzny serwis **wmbusmeters.org** z ostatnią
-odebraną ramką tego licznika i pokazuje jej szczegółową analizę.
-
-Do czego się przydaje:
-- **Ustalenie właściwego sterownika** — gdy „auto" nie pokazuje sensownych
-  wartości, analiza często podpowiada, jakiego producenta/sterownika użyć
-  (wtedy ustaw go w polu **Sterownik**).
-- **Diagnostyka** nietypowego lub nierozpoznanego licznika.
-
-> 🌐 **Uwaga o prywatności**: kliknięcie wysyła surową ramkę do zewnętrznej strony
-> (otwiera się w nowej karcie przeglądarki). **Klucz AES nigdy nie jest wysyłany** —
-> zostaje wyłącznie na urządzeniu. Dla liczników zaszyfrowanych przesyłana ramka
-> i tak pozostaje zaszyfrowana; dla nieszyfrowanych zawiera bieżący odczyt.
-
 ---
 
 ## 5. Zakładka „Logi"
@@ -560,13 +542,18 @@ wersje firmware rozpoznają coraz więcej liczników.
 
 ### Jak pobrać ramki
 
-**Sposób A — jedna ramka, najprościej.** W szczegółach licznika kliknij
-**„Analizuj ramkę na wmbusmeters.org"** (sekcja 4). W otwartym adresie znajduje
-się **surowa ramka w hex** — skopiuj cały ten ciąg. Wystarczy na początek, ale
-do dekodera lepiej zebrać kilka.
+**Sposób A — jedna ramka, najprościej.** Włącz **REST API** (Ustawienia →
+REST API) i pobierz szczegóły licznika — z komputera w tej samej sieci
+(`<numer>` = numer licznika z panelu):
 
-**Sposób B — wiele ramek, zalecane.** Włącz **REST API** (Ustawienia → REST API)
-i pobierz ostatnie ramki do pliku — z komputera w tej samej sieci:
+```
+curl http://meterradiobridge.local/api/meter/<numer>
+```
+
+W odpowiedzi pole `raw_hex` to **surowa ramka w hex** — skopiuj cały ten ciąg.
+Wystarczy na początek, ale do dekodera lepiej zebrać kilka.
+
+**Sposób B — wiele ramek, zalecane.** Pobierz ostatnie ramki do pliku:
 
 ```
 curl http://meterradiobridge.local/api/frames > ramki.json
