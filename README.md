@@ -6,13 +6,13 @@ podzielników kosztów), które nadają w standardzie **wireless M-Bus (868 MHz)
 tym samym, którego używa większość liczników z odczytem radiowym w Polsce
 i Europie.
 
-Urządzenie odbiera ich transmisje, rozszyfrowuje (jeśli masz klucz) i pokazuje
-odczyty w przejrzystym panelu na telefonie lub komputerze. Może też wysyłać dane
-do Home Assistant (MQTT) albo własnego systemu (webhook).
+Urządzenie łapie ich transmisje, odszyfrowuje je (o ile masz klucz) i pokazuje
+odczyty w panelu — na telefonie albo komputerze. Dane może też przekazywać dalej:
+do Home Assistant przez MQTT lub do własnego systemu przez webhook.
 
-Firmware jest już wgrany — ta instrukcja przeprowadzi Cię przez uruchomienie
-i wszystkie funkcje. Nie potrzebujesz żadnego oprogramowania ani kabla; wszystko
-robisz przez przeglądarkę.
+Firmware jest już wgrany. Ta instrukcja poprowadzi Cię przez uruchomienie i po
+kolei przez wszystkie funkcje. Nie instalujesz żadnego programu, nie podłączasz
+kabla do komputera — robisz wszystko w przeglądarce.
 
 ---
 
@@ -320,16 +320,19 @@ ustaw nowy; **Usuń CA** = wróć do samego szyfrowania bez weryfikacji.
 
 Na maszynie z brokerem (przykład: Linux, mosquitto 2.x):
 
+> ⚠️ **Łączysz się po adresie IP?** Wpisz ten adres w certyfikacie **dwa razy**:
+> raz jako `IP.1` i raz jako `DNS.1`. Mostek (mbedtls w ESP32) sprawdza adres
+> tylko po wpisach `DNS` — bez tego drugiego odrzuci certyfikat, a w logu brokera
+> zobaczysz `bad certificate`. Widać to w polu `[alt]` poniżej.
+
 ```bash
 # 1. Własny urząd (CA) — 10 lat; klucz ca.key trzymaj w tajemnicy
 openssl genrsa -out ca.key 2048
 openssl req -x509 -new -key ca.key -sha256 -days 3650 \
   -subj "/CN=MQTT-CA-MOJDOM" -out ca.crt
 
-# 2. Certyfikat serwera — w SAN wpisz adresy, którymi łączą się klienci.
-#    WAŻNE: adres IP wpisz DWA razy — jako IP.x ORAZ jako DNS.x. Mostek
-#    (mbedtls w ESP32) porównuje adres wyłącznie z wpisami DNS; bez tego
-#    odrzuci certyfikat („bad certificate" w logu brokera).
+# 2. Certyfikat serwera — w SAN adresy, którymi łączą się klienci
+#    (adres IP jako IP.x ORAZ DNS.x — patrz uwaga nad blokiem)
 cat > san.cnf <<EOF
 [req]
 distinguished_name = dn
@@ -724,7 +727,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 - **Sterownik (driver)** — sposób interpretacji danych konkretnego producenta.
 - **RSSI** — siła odbieranego sygnału w dBm (bliżej 0 = mocniejszy).
 - **MQTT** — protokół do przesyłania danych m.in. do Home Assistant.
-- **OTA** — aktualizacja oprogramowania „po powietrzu", przez przeglądarkę.
+- **OTA** — bezprzewodowa aktualizacja oprogramowania, przez przeglądarkę.
 
 ---
 
