@@ -432,8 +432,6 @@ Urządzenie z dostępem do internetu **aktualizuje się samo**: mniej więcej co
 odczyty i ustawienia zostają). Każde wydanie jest **podpisane cyfrowo** —
 urządzenie odrzuci obraz uszkodzony albo podmieniony.
 
-- **Kanał wydań** — `Stabilny` (domyślny) albo `Beta` (nowości wcześniej, dla
-  chętnych).
 - **Aktualizuj automatycznie** — możesz wyłączyć; wtedy aktualizujesz ręcznie
   przyciskiem poniżej.
 - **Sprawdź teraz** — od razu sprawdza i, jeśli jest nowsza wersja, instaluje ją.
