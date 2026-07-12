@@ -425,6 +425,25 @@ Pola **tylko do odczytu** — bieżący stan urządzenia: **Wersja** oprogramowa
 z internetu — daje poprawne znaczniki czasu). Te same liczniki diagnostyczne są
 też dostępne pod `http://meterradiobridge.local/api/status` (pole `diag`).
 
+### Aktualizacja
+
+Urządzenie z dostępem do internetu **aktualizuje się samo**: mniej więcej co
+6 godzin sprawdza, czy jest nowe wydanie, i instaluje je w tle (krótki restart,
+odczyty i ustawienia zostają). Każde wydanie jest **podpisane cyfrowo** —
+urządzenie odrzuci obraz uszkodzony albo podmieniony.
+
+- **Kanał wydań** — `Stabilny` (domyślny) albo `Beta` (nowości wcześniej, dla
+  chętnych).
+- **Aktualizuj automatycznie** — możesz wyłączyć; wtedy aktualizujesz ręcznie
+  przyciskiem poniżej.
+- **Sprawdź teraz** — od razu sprawdza i, jeśli jest nowsza wersja, instaluje ją.
+  Wynik zobaczysz pod przyciskiem (wraz z krótkim opisem wydania).
+
+> 🌐 **Urządzenie w sieci bez internetu?** Pobierz najnowsze wydanie ze strony
+> [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware) — plik
+> `firmware.bin` **i** podpis `.sig` (możesz na telefon) — a potem wgraj je przez
+> *Zarządzanie → Aktualizacja z pliku*.
+
 ---
 
 ### Zarządzanie (kopie, aktualizacja, reset)
@@ -435,10 +454,12 @@ Na dole zakładki Ustawienia:
   sterowniki, klucze). Trzymaj go jako kopię zapasową.
 - **Import konfiguracji** — wgrywa wcześniej zapisany plik (np. po wymianie
   urządzenia lub przywróceniu).
-- **Aktualizacja firmware (OTA)** — wgranie nowej wersji oprogramowania przez
-  przeglądarkę. Strona ma dwa pola: **firmware** (`firmware.bin`) oraz
-  **interfejs** (`littlefs.bin` — sam panel web). Urządzenie weryfikuje obraz
-  i po wgraniu się zrestartuje. Ustawienia (liczniki, MQTT, hasło…) są zachowane.
+- **Aktualizacja z pliku (.bin)** — ręczne wgranie wydania pobranego z
+  [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware): wskaż
+  plik `firmware.bin` **i** podpis `.sig`, urządzenie zweryfikuje podpis
+  wydania i po wgraniu się zrestartuje. Strona ma też drugie pole — **interfejs**
+  (`littlefs.bin`, sam panel web) — używane przy aktualizacjach interfejsu.
+  Ustawienia (liczniki, MQTT, hasło…) są zachowane.
 - **Uruchom ponownie** — zwykły restart.
 
 > 🔐 **Eksport, import i aktualizacja firmware wymagają ustawionego hasła panelu**
