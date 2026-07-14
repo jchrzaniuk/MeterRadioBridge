@@ -35,7 +35,9 @@ kabla do komputera — robisz wszystko w przeglądarce.
 ## 2. Pierwsze uruchomienie
 
 ### Krok 1 — podłącz zasilanie
-Podłącz urządzenie kablem USB-C. Po chwili zaświeci się dioda — urządzenie startuje.
+Podłącz urządzenie kablem USB-C. Po chwili odezwie się dioda LED: dwa błyski,
+sekundy przerwy i znowu dwa — to znaczy, że urządzenie wstało i wystawiło własną
+sieć konfiguracyjną. Co oznaczają pozostałe sposoby mrugania, opisuje rozdział 3.
 
 ### Krok 2 — połącz się z jego siecią konfiguracyjną
 Przy pierwszym uruchomieniu (lub gdy nie zna jeszcze Twojego Wi-Fi) urządzenie
@@ -78,7 +80,69 @@ IP urządzenia na liście klientów routera i wejdź pod `http://<adres-ip>`.
 
 ---
 
-## 3. Panel — przegląd
+## 3. Przycisk i dioda LED
+
+Na urządzeniu jest **jeden przycisk** i **jedna dioda LED**. Ilekroć w tej
+instrukcji pada słowo „przycisk" albo „dioda LED", chodzi właśnie o nie — nie ma
+innych, więc nie ma czego mylić.
+
+### Co pokazuje dioda LED
+
+| Dioda | Co się dzieje |
+|---|---|
+| powoli rozjaśnia się i gaśnie, jak oddech (cykl ok. 6 s) | praca normalna — urządzenie jest w Twoim Wi-Fi i nasłuchuje liczników |
+| dwa błyski, potem ok. 2 s ciemno — i tak w kółko | urządzenie wystawia własną sieć `MeterRadioBridge-Setup`: albo nie zna jeszcze Twojego Wi-Fi, albo nie potrafi się do niego połączyć |
+| szybkie miganie, kilka razy na sekundę | trzymasz przycisk — trwa odliczanie do przywrócenia ustawień fabrycznych |
+| trzy szybkie błyski i restart | ustawienia fabryczne przywrócone |
+
+Dioda **nie sygnalizuje odbioru ramek** — mruga tak samo, gdy liczniki nadają,
+jak i wtedy, gdy w eterze jest cisza. To, czy urządzenie coś słyszy, sprawdzisz
+w zakładce **Logi**.
+
+### Co robi przycisk
+
+Krótkie naciśnięcie **nie robi nic** i tak ma być. (Dawniej przełączało tryb
+radia, ale T1 i C1 są dziś nasłuchiwane jednocześnie, więc nie ma czego
+przełączać — patrz rozdział 7 → *Radio*.) Przycisk służy do jednej rzeczy:
+**przywrócenia ustawień fabrycznych**.
+
+### Przywrócenie ustawień fabrycznych (factory reset)
+
+Przydaje się, gdy zapomnisz hasła do panelu, przenosisz urządzenie do zupełnie
+innej sieci albo oddajesz je komuś dalej i chcesz zabrać z niego swoje dane.
+
+1. Urządzenie ma być **zasilone i normalnie pracować**. Nic nie odłączasz, nie ma
+   żadnego trybu serwisowego.
+2. **Wciśnij przycisk i trzymaj.** Po pół sekundy dioda zacznie szybko migać —
+   to znak, że odliczanie ruszyło.
+3. **Trzymaj przez 5 sekund.** Gdy czas minie, dioda błyśnie trzy razy,
+   a urządzenie samo się zrestartuje. Wtedy możesz puścić przycisk.
+4. Po restarcie urządzenie znów wystawia sieć **`MeterRadioBridge-Setup`**
+   (hasło `meterbridge`) — konfigurujesz je od nowa, tak jak w rozdziale 2.
+
+Puszczenie przycisku przed upływem 5 sekund przerywa procedurę: nic nie zostaje
+skasowane, dioda wraca do zwykłego mrugania. Przypadkowe naciśnięcie jest więc
+nieszkodliwe.
+
+> ⚠️ **Reset kasuje wszystko, co ustawiłeś.** Przepadają: nazwa i hasło Twojego
+> Wi-Fi, hasło do panelu, lista liczników razem z nazwami i **kluczami AES**,
+> ustawienia MQTT, webhooka, REST API i strefy czasowej oraz historia odczytów.
+> Zostaje wgrane oprogramowanie — reset **nie cofa** wersji firmware ani nie
+> przywraca tej, z którą urządzenie wyszło z fabryki.
+
+> 💾 **Zanim zresetujesz, zrób kopię.** *Ustawienia → Zarządzanie → Eksport
+> konfiguracji* zapisuje liczniki i klucze do pliku, a po resecie wracają jednym
+> kliknięciem (*Import konfiguracji*). Jest tu haczyk: jeśli resetujesz właśnie
+> dlatego, że **nie pamiętasz hasła panelu**, to eksport jest niedostępny (wymaga
+> zalogowania) i klucze AES trzeba będzie wpisać ręcznie jeszcze raz. Warto
+> trzymać kopię zawczasu.
+
+Jeśli chcesz tylko zrestartować urządzenie, a nie czyścić ustawień, użyj
+*Ustawienia → Zarządzanie → **Uruchom ponownie***. Przycisk takiej funkcji nie ma.
+
+---
+
+## 4. Panel — przegląd
 
 Na dole są trzy zakładki:
 
@@ -89,7 +153,7 @@ Na dole są trzy zakładki:
 
 ---
 
-## 4. Zakładka „Liczniki"
+## 5. Zakładka „Liczniki"
 
 Każdy licznik, który urządzenie usłyszy, **pojawia się tu automatycznie** — nie
 musisz nic konfigurować, żeby go zobaczyć. Konfiguracja przydaje się, by nadać
@@ -239,7 +303,7 @@ Zapisz przyciskiem **Dodaj licznik**. Licznik do usunięcia: **Usuń licznik**.
 
 ---
 
-## 5. Zakładka „Logi"
+## 6. Zakładka „Logi"
 
 Strumień **ostatnich odebranych ramek radiowych**. Najprostszy sposób sprawdzić,
 czy urządzenie w ogóle coś słyszy. U góry jest licznik ramek i przycisk
@@ -251,7 +315,7 @@ Gdy lista jest pusta, urządzenie jeszcze nic nie odebrało — sprawdź antenę
 
 ---
 
-## 6. Zakładka „Ustawienia"
+## 7. Zakładka „Ustawienia"
 
 Sekcje opisane w kolejności od góry panelu.
 
@@ -511,14 +575,16 @@ Jeśli nie masz pewności — **nie włączaj kopii do MQTT** i korzystaj z eksp
 ręcznego. Daje tę samą ochronę bez wystawiania kluczy poza urządzenie.
 
 ### Factory reset (przywrócenie ustawień fabrycznych)
-Gdy chcesz wyczyścić wszystko (np. zapomniane hasło panelu): **przytrzymaj
-przycisk użytkownika (user button) na urządzeniu przez ok. 5 sekund**. Skasuje to
-wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
-`MeterRadioBridge-Setup` jak przy pierwszym uruchomieniu.
+W panelu nie ma takiego przycisku — ustawienia fabryczne przywraca się
+**przyciskiem na urządzeniu**: wciskasz go i trzymasz przez **5 sekund**, aż
+dioda LED błyśnie trzy razy i urządzenie się zrestartuje. Kasuje to wszystkie
+ustawienia, liczniki (z kluczami AES) i historię, a urządzenie wraca do sieci
+`MeterRadioBridge-Setup` jak przy pierwszym uruchomieniu. Krok po kroku i co
+dokładnie ginie — **rozdział 3**.
 
 ---
 
-## 7. Rozwiązywanie problemów
+## 8. Rozwiązywanie problemów
 
 | Problem | Co zrobić |
 |---|---|
@@ -526,7 +592,8 @@ wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
 | Licznik widoczny, ale bez odczytów, z kłódką 🔒 | Jest zaszyfrowany — wpisz **Klucz AES-128** w jego konfiguracji. |
 | Wartości wyglądają bez sensu | Zmień **Sterownik** z „auto" na właściwy dla producenta, albo sprawdź **Typ urządzenia**. |
 | `meterradiobridge.local` nie otwiera się | Wejdź po adresie IP urządzenia (znajdziesz go na liście klientów routera). |
-| Nie pamiętam hasła do panelu | Zrób **factory reset** przyciskiem (5 s) i skonfiguruj od nowa. |
+| Nie pamiętam hasła do panelu | Przywróć ustawienia fabryczne: trzymaj **przycisk** na urządzeniu przez **5 s**, aż dioda błyśnie trzy razy (rozdział 3). Skasuje to również liczniki i klucze AES — trzeba je wpisać na nowo. |
+| Dioda mruga „dwa błyski i przerwa", choć urządzenie ma być w moim Wi-Fi | Nie udało mu się połączyć, więc wystawił sieć `MeterRadioBridge-Setup` — połącz się z nią i sprawdź nazwę sieci oraz hasło (rozdział 2). Częsta przyczyna: sieć jest na paśmie 5 GHz albo router jest za daleko. |
 | Nie mogę zaktualizować firmware / wyeksportować konfiguracji (błąd 403) | Te funkcje **wymagają ustawionego hasła panelu** — ustaw je w *Ustawienia → Dostęp do panelu* i spróbuj ponownie. |
 | „Za dużo prób logowania" (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
 | Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
@@ -535,7 +602,7 @@ wszystkie ustawienia, liczniki i historię — urządzenie wróci do sieci
 
 ---
 
-## 8. Nierozpoznany licznik? Pomóż ulepszyć dekodowanie
+## 9. Nierozpoznany licznik? Pomóż ulepszyć dekodowanie
 
 Czasem licznik jest **widoczny** (urządzenie odbiera jego ramki), ale:
 - pokazuje **„Inny"/brak sterownika** i żadnych odczytów, albo
@@ -631,7 +698,7 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 
 ---
 
-## 9. Dobre praktyki
+## 10. Dobre praktyki
 
 - **Ustaw hasło panelu** (Dostęp do panelu) — zwłaszcza z kluczami AES.
 - **Zrób eksport konfiguracji** po skonfigurowaniu liczników.
@@ -640,21 +707,21 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 
 ---
 
-## 10. Wspierane liczniki (sterowniki)
+## 11. Wspierane liczniki (sterowniki)
 
 Urządzenie ma wbudowany zestaw **sterowników** rozpoznających liczniki różnych
 producentów. Dla większości standardowych liczników (Kamstrup, Landis+Gyr, Sensus,
 Diehl i inne nadające zgodnie z normą EN 13757) wystarcza **auto (generyczny
 DIF/VIF)** — po odszyfrowaniu czyta je bez dedykowanego sterownika. Konkretny
 sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto" nie pokazuje sensownych
-wartości (sekcja 4 → *Sterownik*). Pełną, aktualną listę masz zawsze w panelu (pole
+wartości (sekcja 5 → *Sterownik*). Pełną, aktualną listę masz zawsze w panelu (pole
 *Sterownik*) oraz pod `GET /api/drivers`.
 
 ### ✅ Czytane automatycznie (sterownik „auto", bez wyboru)
 
 Liczniki nadające zgodnie z normą **EN 13757** urządzenie czyta **samo**, bez
 wybierania sterownika — jawne od razu, **zaszyfrowane po wpisaniu klucza AES**
-(sekcja 4). Poniżej rodziny i modele potwierdzone, że działają na „auto" (większość
+(sekcja 5). Poniżej rodziny i modele potwierdzone, że działają na „auto" (większość
 zweryfikowana realnymi ramkami). To **nie wymaga** żadnego z dedykowanych
 sterowników z dalszej części.
 
@@ -730,11 +797,11 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 > rozpoznaje i oznacza — nie pomyli ich z licznikiem.
 >
 > Lista rośnie z każdą aktualizacją firmware — jeśli Twojego licznika brakuje, patrz
-> sekcja 8 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
+> sekcja 9 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
 
 ---
 
-## 11. Słowniczek
+## 12. Słowniczek
 
 - **wM-Bus** — radiowy standard liczników mediów (woda, ciepło, gaz) na 868 MHz.
 - **T1 / C1** — warianty trybu nadawania liczników; oba na 868.95 MHz, łapane
