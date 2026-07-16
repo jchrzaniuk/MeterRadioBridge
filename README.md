@@ -515,15 +515,22 @@ też dostępne pod `http://meterradiobridge.local/api/status` (pole `diag`).
 
 ### Aktualizacja
 
-Urządzenie z dostępem do internetu **aktualizuje się samo**: mniej więcej co
-6 godzin sprawdza, czy jest nowe wydanie, i instaluje je w tle (krótki restart,
-odczyty i ustawienia zostają). Każde wydanie jest **podpisane cyfrowo** —
-urządzenie odrzuci obraz uszkodzony albo podmieniony.
+Urządzenie z dostępem do internetu **samo sprawdza** mniej więcej co 6 godzin,
+czy jest nowe wydanie — ale **nigdy nie instaluje go bez Twojej zgody**.
+O instalacji zawsze decydujesz Ty.
 
-- **Aktualizuj automatycznie** — możesz wyłączyć; wtedy aktualizujesz ręcznie
-  przyciskiem poniżej.
-- **Sprawdź teraz** — od razu sprawdza i, jeśli jest nowsza wersja, instaluje ją.
-  Wynik zobaczysz pod przyciskiem (wraz z krótkim opisem wydania).
+- **Sprawdzaj automatycznie** — gdy pojawi się nowa wersja, zobaczysz ją
+  w tej sekcji panelu, a przy włączonym MQTT urządzenie wyśle alert
+  `update_available` na temat `{prefix}/bridge/alert`.
+- **Sprawdź teraz** — sprawdza od razu i pokazuje wynik z krótkim opisem
+  wydania.
+- **Zainstaluj teraz** — pojawia się, gdy jest dostępna nowsza wersja.
+  Po potwierdzeniu urządzenie pobiera wydanie, instaluje je i restartuje się
+  na kilkanaście sekund; odczyty i ustawienia zostają. Instalacja wymaga
+  ustawionego hasła panelu.
+
+Każde wydanie jest **podpisane cyfrowo** — urządzenie odrzuci obraz uszkodzony
+albo podmieniony.
 
 > 🌐 **Urządzenie w sieci bez internetu?** Pobierz najnowsze wydanie ze strony
 > [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware) — plik
