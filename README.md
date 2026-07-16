@@ -356,6 +356,30 @@ Po włączeniu liczniki z nadaną nazwą pojawią się w Home Assistant automaty
 Zmiany ustawień MQTT stosują się **od razu, bez restartu urządzenia** — mostek
 sam rozłącza się i łączy z nowymi parametrami.
 
+### Zużycia okresowe a stan liczydła (statystyki w Home Assistant)
+
+Część liczników Techem nie nadaje przez radio stanu liczydła wprost, tylko dwie
+liczby związane z okresem rozliczeniowym — a mostek publikuje ich sumę. Co ta
+suma znaczy, zależy od rodzaju licznika:
+
+- **Wodomierze Techem** (sterowniki `mkradio3`/`mkradio4`) nadają **stan
+  liczydła w dniu rozliczenia** oraz **zużycie od tego dnia**. Suma to po
+  prostu bieżący stan liczydła — rośnie płynnie przez cały rok, także w dniu
+  rozliczeniowym. Statystyki i panel Energia działają bez niespodzianek.
+- **Ciepłomierze Techem** (sterowniki `compact5`/`vario451`) nadają **zużycie
+  poprzedniego okresu** i **zużycie bieżącego okresu** — stanu liczydła w ogóle
+  nie ma w ramce. W dniu rozliczenia suma **spada**: stare zużycie wypada,
+  bieżące startuje od zera. Home Assistant traktuje spadek sumy narastającej
+  jak wymianę licznika i tego jednego dnia dopisze do statystyk zawyżone
+  zużycie.
+
+Jeśli taki ciepłomierz jest dodany do panelu Energia, raz w roku — po dniu
+rozliczeniowym — trzeba poprawić statystykę ręcznie: **Narzędzia deweloperskie →
+Statystyki → wybierz encję → Dostosuj sumę**. Encje „Energia poprz. okresu"
+i „Energia bież. okresu" są tylko informacyjne: mostek celowo nie tworzy dla
+nich statystyk długoterminowych, więc nie da się ich (błędnie) dodać do panelu
+Energia.
+
 ### MQTT po TLS (szyfrowanie i weryfikacja brokera)
 
 Włączenie **TLS / SSL** szyfruje połączenie z brokerem (podsłuch w sieci nie
