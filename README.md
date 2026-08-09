@@ -789,7 +789,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
 | **`mkradio3`, `mkradio3a`, `mkradio4`, `mkradio4a`** | Techem MK Radio 3/4 | bez klucza |
-| **`izar`** | Diehl / IZAR / Sappel / Hydrometer (PRIOS) | bez klucza |
+| **`izar`** | Diehl / IZAR / Sappel (SAP) / Hydrometer (PRIOS) | bez klucza |
 | **`apator162`, `apatorna1`** | Apator (wodomierze) | bez klucza (auto) |
 | **`apator_water_b6`** | Apator AT-WMBUS (wodomierz, format 05/07) | bez klucza (auto) |
 | **`apator172`** | Apator AT-WMBUS-17-2 (nakładka JS-02 Smart+/C+) | zależnie od nakładki |
