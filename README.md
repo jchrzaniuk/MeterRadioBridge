@@ -317,7 +317,8 @@ Gdy lista jest pusta, urządzenie jeszcze nic nie odebrało — sprawdź antenę
 
 ## 7. Zakładka „Ustawienia"
 
-Sekcje opisane w kolejności od góry panelu.
+Sekcje opisane w kolejności od góry panelu. Sekcja **Moduł MRB-P1** ma własny
+rozdział — patrz rozdział 8.
 
 ### Dostęp do panelu (ustaw hasło!)
 Ustaw **Użytkownik** i **Hasło**, żeby panel wymagał logowania. Puste pole
@@ -623,7 +624,164 @@ dokładnie ginie — **rozdział 3**.
 
 ---
 
-## 8. Rozwiązywanie problemów
+## 8. Moduł MRB-P1 — licznik z portem P1
+
+Liczniki energii elektrycznej często nie nadają przez radio, za to mają
+przewodowy port **P1** (gniazdo RJ12) do odczytu lokalnego. MRB-P1 to osobne
+urządzenie, które podłączasz do tego portu; odczyty przekazuje do mostu drogą
+radiową. Most traktuje je jak każdy inny licznik — pojawia się w zakładce
+**Liczniki**, trafia do MQTT i do Home Assistant na tych samych zasadach.
+
+Wszystko ustawiasz w panelu mostu, w **Ustawienia → Moduł MRB-P1**. Do samego
+modułu nie podłączasz komputera i niczego w nim nie wpisujesz.
+
+> 🔐 **Najpierw ustaw hasło panelu** (rozdział 7 → *Dostęp do panelu*).
+> Parowanie i przekazanie kluczy to operacje wrażliwe. Bez zalogowania panel
+> odpowie **Panel wymaga zalogowania** i nic nie zapisze.
+
+### Co przygotować
+
+**Aktywny port P1.** Gniazdo bywa fizycznie obecne, ale wyłączone — operator
+włącza je na wniosek. W Stoen służy do tego „Wniosek o uruchomienie / wyłączenie
+interfejsu lokalnego licznika zdalnego odczytu"; aktywacja jest bezpłatna, a
+operator zastrzega na nią do dwóch miesięcy. Złóż wniosek, zanim zaczniesz
+montaż.
+
+**Klucze EK i AK.** Dane z portu P1 są zaszyfrowane. Operator wydaje do nich
+dwa różne sekrety: **EK** (klucz szyfrujący) i **AK** (klucz uwierzytelniający,
+którym moduł sprawdza, czy ramka jest prawdziwa). Poproś o oba w tym samym
+wniosku. Każdy ma 32 znaki szesnastkowe, czyli 16 bajtów.
+
+**Kartę recovery modułu.** To plik JSON dołączony do MRB-P1. Zawiera numer
+urządzenia, identyfikator i kod parowania. Bez niej nie sparujesz modułu z mostem
+— zachowaj ją tak jak klucze.
+
+### Krok 1 — sparuj moduł z mostem
+
+Otwórz **Ustawienia → Moduł MRB-P1**. Dopóki moduł nie jest sparowany, panel
+pokazuje formularz parowania.
+
+1. Kliknij **Wczytaj kartę recovery** i wskaż plik JSON. Panel wypełni trzy pola:
+   **Numer urządzenia MRB-P1**, **Identyfikator urządzenia (DEVICE ID)**
+   i **Kod parowania**. Możesz je też wpisać ręcznie — wszystkie trzy są
+   wydrukowane na karcie.
+2. Kliknij **Sparuj moduł**.
+3. Panel pokaże **Czekam, aż właściwy moduł MRB-P1 zgłosi się radiowo**. Moduł
+   odzywa się co kilkadziesiąt sekund, więc parowanie zwykle trwa chwilę.
+
+Most sparuje wyłącznie urządzenie zgodne z wczytaną kartą. Numer urządzenia to
+ten sam numer, pod którym moduł pojawi się później w zakładce **Liczniki**.
+
+> Jeden most obsługuje jeden moduł. Jeżeli spróbujesz sparować drugi, panel
+> odmówi: **bridge already has a paired MRB-P1; local recovery required**.
+> Zmiana wymaga lokalnej procedury recovery na module.
+
+### Krok 2 — wpisz klucze licznika
+
+Po sparowaniu w tej samej sekcji pojawia się karta **Klucze licznika P1**.
+
+1. Wpisz **Klucz szyfrujący EK** — 32 znaki hex.
+2. Wpisz **Klucz uwierzytelniający AK** — 32 znaki hex.
+3. **System title (opcjonalnie)** zostaw pusty. Wypełnij go tylko wtedy, gdy
+   operator przekazał tę wartość dla Twojego licznika; ma wtedy 16 znaków hex.
+4. Kliknij **Przekaż klucze do modułu**.
+
+Przycisk **Pokaż** przy polu odsłania wpisaną wartość, żeby dało się ją
+porównać z pismem od operatora.
+
+Przy złej długości panel nie wyśle niczego i napisze wprost: **EK i AK muszą mieć
+po 32 znaki hex. System title pozostaw pusty albo wpisz 16 znaków hex.**
+
+#### Klucze kandydujące a aktywne
+
+Nowe klucze nie zastępują od razu działającej konfiguracji. Najpierw trafiają do
+modułu jako **kandydat** i muszą się sprawdzić na prawdziwej ramce z licznika.
+Zobaczysz kolejno:
+
+| Komunikat | Co znaczy |
+|---|---|
+| **Klucze przekazane** | moduł potwierdził odbiór |
+| **Klucze są zapisane. Moduł czeka na poprawną ramkę z licznika P1** | trwa sprawdzanie na żywych danych |
+| **Moduł potwierdził poprawne odszyfrowanie i odczyt danych P1** | klucze są aktywne |
+
+Dzięki temu pomyłka przy przepisywaniu nie kasuje konfiguracji, która działała.
+Jeżeli stan długo nie wychodzi poza czekanie na ramkę, sprawdź, czy operator
+faktycznie włączył port, czy przewód siedzi w gnieździe i czy EK z AK nie
+zamieniły się miejscami.
+
+Klucze wpisujesz w jedną stronę. Panel nie pokaże ich ponownie i nie umieszcza
+ich w kopii konfiguracji mostu.
+
+### Stan modułu
+
+Karta **Stan MRB-P1** odpowiada na pytanie „czy to w ogóle działa". Przycisk
+**Sprawdź teraz** odpytuje moduł od razu, bez czekania na kolejny heartbeat.
+
+Wiersz **Łączność** ma sześć wartości:
+
+| Łączność | Znaczenie |
+|---|---|
+| **Działa** | moduł, radio i wejście P1 działają poprawnie |
+| **Bez ramki** | moduł odpowiada radiowo, ale nie odebrał jeszcze ramki z portu P1 |
+| **Dane P1 nieaktualne** | moduł odpowiada, lecz od ponad 3 minut nie odczytał poprawnej ramki |
+| **Brak kluczy** | moduł odpowiada, ale nie ma ani aktywnej, ani testowej konfiguracji EK/AK |
+| **Brak kontaktu** | moduł nie odpowiedział — sprawdź jego zasilanie i zasięg |
+| **Brak danych** | most jeszcze o nic nie pytał; naciśnij **Sprawdź teraz** |
+
+Pozostałe wiersze przydają się przy zgłaszaniu problemu: **Ostatni kontakt**,
+**Ostatni poprawny odczyt P1**, **Firmware MRB-P1**, **Czas pracy**, **Ostatni
+restart**, **Sygnał radiowy**, **Ramki P1 poprawne / odebrane**, **Błędy P1:
+transport / szyfr / tag / zapis NVS**, **Radio: nadane / odrzucone / awarie**
+oraz **Konfiguracja EK/AK**.
+
+Rozdzielenie „poprawne / odebrane" mówi więcej niż sama liczba odczytów. Ramki
+odbierane, ale nieodszyfrowane, wskazują na klucze; brak odbieranych w ogóle —
+na port albo przewód.
+
+### Zbieranie ramki P1 (diagnostyka)
+
+Karta **Zbieranie ramki P1** pobiera z modułu jeden surowy telegram, żeby dało
+się go obejrzeć bez rozbierania instalacji.
+
+1. **Rozpocznij zbieranie** — moduł zapisze najbliższą pełną ramkę z licznika.
+2. **Pobierz zebraną ramkę**, gdy stan zmieni się na **Gotowa**.
+3. **Usuń wynik sesji**, kiedy plik nie jest już potrzebny.
+
+Zbieranie idzie w tle: **Możesz opuścić ten ekran — urządzenie pracuje dalej.**
+Zanim zaczniesz nową sesję, zakończ poprzednią (**Przerwij zbieranie**), inaczej
+panel odpowie **Najpierw przerwij aktywne zbieranie**. Jeżeli transmisja się
+urwie, zobaczysz **Nie dotarła cała ramka. Spróbuj ponownie.**
+
+Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
+**Nie ma w nim EK ani AK**, więc możesz go dołączyć do zgłoszenia.
+
+### Rozwiązywanie problemów
+
+| Problem | Co zrobić |
+|---|---|
+| Panel pokazuje tylko formularz parowania | Moduł nie jest sparowany. Wczytaj kartę recovery i kliknij **Sparuj moduł**. Przy wpisywaniu kluczy przed parowaniem zobaczysz **Najpierw sparuj moduł MRB-P1 z tym mostem**. |
+| **Moduł nie potwierdził parowania** | Sprawdź zasilanie modułu, odległość od mostu i to, czy karta recovery należy do tego egzemplarza. |
+| **Karta recovery jest niekompletna albo uszkodzona** | Wczytany plik nie ma wszystkich trzech wartości. Użyj oryginalnego pliku JSON albo przepisz dane z karty ręcznie. |
+| **Moduł nie potwierdził odebrania kluczy** | Moduł nie odpowiedział na przekazanie konfiguracji. Sprawdź zasilanie i zasięg, potem spróbuj ponownie. |
+| **Moduł odrzucił niepoprawną konfigurację kluczy** | Klucze dotarły, ale moduł ich nie przyjął. Zweryfikuj EK i AK z pismem od operatora. |
+| **Moduł obsługuje już inną operację** | Trwa parowanie, przekazywanie kluczy albo zbieranie ramki. Odczekaj i powtórz. |
+| Łączność: **Bez ramki** przez dłuższy czas | Port P1 nie jest aktywny albo przewód nie przewodzi. Zacznij od potwierdzenia u operatora, że interfejs został włączony. |
+| Łączność: **Dane P1 nieaktualne** | Odczyty przychodziły, a przestały. Sprawdź przewód i zasilanie modułu; **Ostatni poprawny odczyt P1** pokaże, kiedy urwały się dane. |
+| **Licznik wersji konfiguracji został wyczerpany** | Skończył się zapas numerów wersji konfiguracji. Wymagana jest lokalna procedura recovery na module. |
+
+### Bezpieczeństwo
+
+- EK i AK są przypisane do odczytu Twojego licznika. Nie wysyłaj ich
+  sprzedawcy urządzenia i nie pokazuj na zrzutach ekranu.
+- Kartę recovery trzymaj razem z dokumentacją urządzenia. Kto ma kartę, ten może
+  sparować moduł z innym mostem.
+- Kopia konfiguracji mostu nie zawiera kluczy P1 ani kodu parowania.
+- Przywrócenie ustawień fabrycznych mostu (rozdział 3) kasuje również parowanie
+  z modułem. Po nim trzeba je wykonać od nowa, z kartą recovery.
+
+---
+
+## 9. Rozwiązywanie problemów
 
 | Problem | Co zrobić |
 |---|---|
@@ -641,7 +799,7 @@ dokładnie ginie — **rozdział 3**.
 
 ---
 
-## 9. Nierozpoznany licznik? Pomóż ulepszyć dekodowanie
+## 10. Nierozpoznany licznik? Pomóż ulepszyć dekodowanie
 
 Czasem licznik jest **widoczny** (urządzenie odbiera jego ramki), ale:
 - pokazuje **„Inny"/brak sterownika** i żadnych odczytów, albo
@@ -737,7 +895,7 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 
 ---
 
-## 10. Dobre praktyki
+## 11. Dobre praktyki
 
 - **Ustaw hasło panelu** (Dostęp do panelu) — zwłaszcza z kluczami AES.
 - **Zrób eksport konfiguracji** po skonfigurowaniu liczników.
@@ -746,7 +904,7 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 
 ---
 
-## 11. Wspierane liczniki (sterowniki)
+## 12. Wspierane liczniki (sterowniki)
 
 Urządzenie ma wbudowany zestaw **sterowników** rozpoznających liczniki różnych
 producentów. Dla większości standardowych liczników (Kamstrup, Landis+Gyr, Sensus,
@@ -836,11 +994,11 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 > rozpoznaje i oznacza — nie pomyli ich z licznikiem.
 >
 > Lista rośnie z każdą aktualizacją firmware — jeśli Twojego licznika brakuje, patrz
-> sekcja 9 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
+> sekcja 10 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
 
 ---
 
-## 12. Słowniczek
+## 13. Słowniczek
 
 - **wM-Bus** — radiowy standard liczników mediów (woda, ciepło, gaz) na 868 MHz.
 - **T1 / C1** — warianty trybu nadawania liczników; oba na 868.95 MHz, łapane
