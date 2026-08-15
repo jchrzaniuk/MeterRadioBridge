@@ -652,25 +652,53 @@ dwa różne sekrety: **EK** (klucz szyfrujący) i **AK** (klucz uwierzytelniają
 którym moduł sprawdza, czy ramka jest prawdziwa). Poproś o oba w tym samym
 wniosku. Każdy ma 32 znaki szesnastkowe, czyli 16 bajtów.
 
-**Kartę recovery modułu.** To plik JSON dołączony do MRB-P1. Zawiera numer
-urządzenia, identyfikator i kod parowania. Bez niej nie sparujesz modułu z mostem
-— zachowaj ją tak jak klucze.
+**Metryczkę urządzenia.** To kartonik wielkości wizytówki, dołączony do MRB-P1
+w pudełku. Znajdziesz na nim numer urządzenia, identyfikator, kod parowania
+i **dwa kody QR**. Bez metryczki nie sparujesz modułu z mostem — trzymaj ją przy
+dokumentacji, tak jak klucze, i nie zostawiaj przy urządzeniu.
+
+> Metryczka z **kodami QR** należy do MRB-P1. Każde urządzenie ma własną, więc
+> nie mieszaj ich ze sobą — kody z jednej nie sparują drugiego.
 
 ### Krok 1 — sparuj moduł z mostem
 
 Otwórz **Ustawienia → Moduł MRB-P1**. Dopóki moduł nie jest sparowany, panel
 pokazuje formularz parowania.
 
-1. Kliknij **Wczytaj kartę recovery** i wskaż plik JSON. Panel wypełni trzy pola:
-   **Numer urządzenia MRB-P1**, **Identyfikator urządzenia (DEVICE ID)**
-   i **Kod parowania**. Możesz je też wpisać ręcznie — wszystkie trzy są
-   wydrukowane na karcie.
-2. Kliknij **Sparuj moduł**.
-3. Panel pokaże **Czekam, aż właściwy moduł MRB-P1 zgłosi się radiowo**. Moduł
+1. Przepisz **numer urządzenia** do pola **Numer urządzenia MRB-P1**. Na
+   metryczce stoi w postaci `MRB-P1-70000042`; do panelu wpisujesz **same
+   cyfry**, czyli `70000042`.
+2. Zeskanuj telefonem **górny kod QR** (podpisany `DEVICE ID`), skopiuj wynik
+   i wklej go w pole **Identyfikator urządzenia (DEVICE ID)**.
+3. Zeskanuj **dolny kod** (podpisany `KOD PAROWANIA`) i wklej w pole **Kod
+   parowania**.
+4. Kliknij **Sparuj moduł**.
+5. Panel pokaże **Czekam, aż właściwy moduł MRB-P1 zgłosi się radiowo**. Moduł
    odzywa się co kilkadziesiąt sekund, więc parowanie zwykle trwa chwilę.
 
-Most sparuje wyłącznie urządzenie zgodne z wczytaną kartą. Numer urządzenia to
-ten sam numer, pod którym moduł pojawi się później w zakładce **Liczniki**.
+Wielkość liter, spacje i myślniki nie mają znaczenia — panel je porządkuje.
+Liczy się, żeby po wklejeniu było **32 znaki**; inaczej zobaczysz
+**Identyfikator i kod parowania muszą mieć po 32 znaki hex**.
+
+> ⚠ **Oba kody wyglądają tak samo.** Każdy to 32 znaki, żaden nie mówi
+> o sobie, którym jest — rozróżnia je wyłącznie podpis na metryczce. Wklejone
+> odwrotnie nie zostaną odrzucone od razu: parowanie po prostu się nie uda,
+> a panel napisze **Moduł nie potwierdził parowania**, tak samo jak przy module
+> bez zasilania. Jeśli to zobaczysz, najpierw sprawdź, czy kody nie zamieniły
+> się miejscami.
+
+Jeśli kod QR jest uszkodzony albo nie masz czym go zeskanować, przepisz obie
+wartości ręcznie — po lewej stronie metryczki, pod nagłówkami **IDENTYFIKATOR
+URZĄDZENIA (DEVICE ID)** i **KOD PAROWANIA**, stoją te same znaki w grupach po
+cztery. Spacje możesz pominąć albo wpisać, to bez różnicy.
+
+Most sparuje wyłącznie urządzenie zgodne z metryczką. Numer urządzenia to ten
+sam numer, pod którym moduł pojawi się później w zakładce **Liczniki**.
+
+Panel ma jeszcze przycisk **Wczytaj kartę recovery**, który przyjmuje plik JSON
+i wypełnia wszystkie trzy pola naraz. To ścieżka serwisowa — plik powstaje przy
+produkcji modułu i zwykle nie trafia do klienta. Jeśli go dostałeś, użyj go
+zamiast kroków 1–3.
 
 > Jeden most obsługuje jeden moduł. Jeżeli spróbujesz sparować drugi, panel
 > odmówi: **bridge already has a paired MRB-P1; local recovery required**.
@@ -760,8 +788,8 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 | Problem | Co zrobić |
 |---|---|
 | Panel pokazuje tylko formularz parowania | Moduł nie jest sparowany. Wczytaj kartę recovery i kliknij **Sparuj moduł**. Przy wpisywaniu kluczy przed parowaniem zobaczysz **Najpierw sparuj moduł MRB-P1 z tym mostem**. |
-| **Moduł nie potwierdził parowania** | Sprawdź zasilanie modułu, odległość od mostu i to, czy karta recovery należy do tego egzemplarza. |
-| **Karta recovery jest niekompletna albo uszkodzona** | Wczytany plik nie ma wszystkich trzech wartości. Użyj oryginalnego pliku JSON albo przepisz dane z karty ręcznie. |
+| **Moduł nie potwierdził parowania** | Trzy przyczyny, w tej kolejności: kody QR wklejone w odwrotne pola (patrz ostrzeżenie w kroku 1), moduł bez zasilania albo za daleko, metryczka od innego egzemplarza. |
+| **Karta recovery jest niekompletna albo uszkodzona** | Wczytany plik JSON nie ma wszystkich trzech wartości. Przepisz dane z metryczki ręcznie albo zeskanuj kody. |
 | **Moduł nie potwierdził odebrania kluczy** | Moduł nie odpowiedział na przekazanie konfiguracji. Sprawdź zasilanie i zasięg, potem spróbuj ponownie. |
 | **Moduł odrzucił niepoprawną konfigurację kluczy** | Klucze dotarły, ale moduł ich nie przyjął. Zweryfikuj EK i AK z pismem od operatora. |
 | **Moduł obsługuje już inną operację** | Trwa parowanie, przekazywanie kluczy albo zbieranie ramki. Odczekaj i powtórz. |
@@ -773,11 +801,12 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 
 - EK i AK są przypisane do odczytu Twojego licznika. Nie wysyłaj ich
   sprzedawcy urządzenia i nie pokazuj na zrzutach ekranu.
-- Kartę recovery trzymaj razem z dokumentacją urządzenia. Kto ma kartę, ten może
-  sparować moduł z innym mostem.
+- Metryczkę trzymaj razem z dokumentacją urządzenia, nie przy module. Kody QR
+  niosą kod parowania — kto je sfotografuje, ten może sparować moduł z innym
+  mostem.
 - Kopia konfiguracji mostu nie zawiera kluczy P1 ani kodu parowania.
 - Przywrócenie ustawień fabrycznych mostu (rozdział 3) kasuje również parowanie
-  z modułem. Po nim trzeba je wykonać od nowa, z kartą recovery.
+  z modułem. Po nim trzeba je wykonać od nowa, z metryczką.
 
 ---
 
