@@ -510,9 +510,23 @@ ciepła Qundis) są łapane razem, bez utraty ramek.
 ### System (informacje)
 Pola **tylko do odczytu** — bieżący stan urządzenia: **Wersja** oprogramowania,
 **IP**, **WiFi RSSI** (siła sygnału), **Wolny heap** (wolna pamięć), **Uptime**
-(czas pracy), liczba **Liczników** oraz status **NTP** (synchronizacja zegara
-z internetu — daje poprawne znaczniki czasu). Te same liczniki diagnostyczne są
-też dostępne pod `http://meterradiobridge.local/api/status` (pole `diag`).
+(czas pracy), liczba **Liczników**, **Odbiór radiowy** oraz status **NTP**
+(synchronizacja zegara z internetu — daje poprawne znaczniki czasu). Te same
+liczniki diagnostyczne są też dostępne pod
+`http://meterradiobridge.local/api/status` (pole `diag`).
+
+Dwa z tych pól ostrzegają, zanim zauważysz brak odczytów:
+
+- **Liczniki** pokazują zapełnienie listy, np. `37 / 64`. Urządzenie pamięta
+  najwyżej 64 liczniki, a w bloku łapie też liczniki sąsiadów. Gdy lista jest
+  pełna, nowy licznik wchodzi na miejsce wpisu **bez nazwy i klucza**, który
+  milczy ponad 6 godzin — liczniki, którym nadałeś nazwę, nigdy nie są
+  usuwane automatycznie. Jeśli pole zrobi się pomarańczowe, usuń z listy
+  liczniki, których nie potrzebujesz.
+- **Odbiór radiowy** pokazuje `✓ OK`, dopóki spływają ramki. Gdy przez pół
+  godziny nie przyjdzie żadna, pojawi się `cisza …` — urządzenie samo
+  przestawia wtedy odbiornik co 30 minut. Jeśli cisza nie mija, sprawdź
+  antenę i to, czy licznik jest w zasięgu.
 
 ### Aktualizacja
 
