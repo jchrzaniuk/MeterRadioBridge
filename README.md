@@ -552,13 +552,14 @@ albo podmieniony.
 > `firmware.bin` **i** podpis `.sig` (możesz na telefon) — a potem wgraj je przez
 > *Zarządzanie → Aktualizacja z pliku*.
 
-Interfejs panelu aktualizuje się **osobno** od firmware: gdy wydanie zmienia
-wygląd lub funkcje panelu (np. dodaje przycisk instalacji aktualizacji),
-pobierz ze strony [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware)
-także obraz interfejsu (`littlefs.bin`) i wgraj go w *Zarządzanie →
-Aktualizacja z pliku*, w polu **interfejs**. Kolejność przy większej
-aktualizacji: najpierw firmware, potem interfejs. Odczyty i ustawienia
-zostają.
+Od wersji 1.16.85 instalacja OTA uruchamiana z panelu pobiera razem firmware i
+pasujący do niego interfejs — nie trzeba aktualizować panelu osobno. Ręczny
+obraz interfejsu (`littlefs.bin`) pozostaje dla urządzeń bez dostępu do
+internetu: pobierz go ze strony
+[meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware) razem z
+firmware i wgraj w *Zarządzanie → Aktualizacja z pliku*, w polu **interfejs**.
+Przy aktualizacji z plików wgraj najpierw firmware, a po restarcie interfejs.
+Odczyty i ustawienia zostają.
 
 ---
 
