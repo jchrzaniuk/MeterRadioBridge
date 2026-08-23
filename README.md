@@ -300,6 +300,9 @@ Zapisz przyciskiem **Dodaj licznik**. Licznik do usunięcia: **Usuń licznik**.
 > 🔑 **Skąd wziąć klucz AES?** Od administratora/dostawcy liczników (spółdzielnia,
 > firma rozliczeniowa, producent). Urządzenie samo nie złamie szyfrowania —
 > bez klucza zobaczysz, że licznik istnieje i jak mocny ma sygnał, ale nie odczyty.
+> Czy Twój model w ogóle potrzebuje klucza, sprawdzisz w
+> [macierzy zgodności](https://meterradiobridge.pl/zgodnosc) — część liczników nadaje jawnie, a część ma klucz
+> wbudowany w urządzenie.
 
 ---
 
@@ -861,6 +864,10 @@ wersje firmware rozpoznają coraz więcej liczników.
 > czynniki i napisać dekoder. Jeśli licznik ma kilka pól (np. stan bieżący
 > i rozliczeniowy), spisz wszystkie.
 
+Zanim zbierzesz materiał, zajrzyj do [macierzy zgodności](https://meterradiobridge.pl/zgodnosc). Część modeli ma
+tam opisany status — od „potrzebny klucz indywidualny" po „format własnościowy,
+nieobsługiwany" — więc od razu widać, czy brakuje dekodera, czy tylko klucza.
+
 ### Co zebrać
 
 1. **Kilka ramek tego licznika** (im więcej, tym lepiej — najlepiej zebrane
@@ -957,6 +964,12 @@ DIF/VIF)** — po odszyfrowaniu czyta je bez dedykowanego sterownika. Konkretny
 sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto" nie pokazuje sensownych
 wartości (sekcja 5 → *Sterownik*). Pełną, aktualną listę masz zawsze w panelu (pole
 *Sterownik*) oraz pod `GET /api/drivers`.
+
+> 🔑 **Szczegółowa macierz zgodności jest na stronie.** Tabele poniżej to skrót.
+> Pod adresem [meterradiobridge.pl/zgodnosc](https://meterradiobridge.pl/zgodnosc) znajdziesz to samo z wersjami
+> telegramów, rodzajem wymaganego klucza i informacją, co jest potwierdzone
+> prawdziwą ramką, a co dopiero czeka na próbkę. Jest tam też osobna tabela
+> B METERS oraz lista urządzeń, których dziś nie odczytamy.
 
 ### ✅ Czytane automatycznie (sterownik „auto", bez wyboru)
 
