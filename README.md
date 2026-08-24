@@ -384,6 +384,12 @@ i „Energia bież. okresu" są tylko informacyjne: mostek celowo nie tworzy dla
 nich statystyk długoterminowych, więc nie da się ich (błędnie) dodać do panelu
 Energia.
 
+Osobna sprawa to aktualizacja z wersji sprzed 1.16.79. Zmieniła się wtedy
+tożsamość encji, więc Home Assistant założył je od nowa, a panel Energia bywa
+zatrzymany w dniu aktualizacji, choć odczyty lecą normalnie. Historia nie
+przepada — zostaje pod starą nazwą i da się do niej wrócić. Procedura z gotowym
+skryptem jest na [meterradiobridge.pl/ha-statystyki](https://meterradiobridge.pl/ha-statystyki).
+
 ### MQTT po TLS (szyfrowanie i weryfikacja brokera)
 
 Włączenie **TLS / SSL** szyfruje połączenie z brokerem (podsłuch w sieci nie
