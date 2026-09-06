@@ -556,18 +556,17 @@ O instalacji zawsze decydujesz Ty.
 Każde wydanie jest **podpisane cyfrowo** — urządzenie odrzuci obraz uszkodzony
 albo podmieniony.
 
-> 🌐 **Urządzenie w sieci bez internetu?** Pobierz najnowsze wydanie ze strony
-> [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware) — plik
-> `firmware.bin` **i** podpis `.sig` (możesz na telefon) — a potem wgraj je przez
-> *Zarządzanie → Aktualizacja z pliku*.
+> 🌐 **Urządzenie w sieci bez internetu?** Od 6 września 2026 nie udostępniamy
+> plików firmware do pobrania — aktualizacje idą wyłącznie przez OTA. Jeśli
+> mostek nie ma dostępu do internetu, napisz do nas; pomożemy zaktualizować go
+> w inny sposób. Pole *Zarządzanie → Aktualizacja z pliku* zostaje w panelu
+> i działa, ale plik musisz otrzymać od nas.
 
 Od wersji 1.16.85 instalacja OTA uruchamiana z panelu pobiera razem firmware i
-pasujący do niego interfejs — nie trzeba aktualizować panelu osobno. Ręczny
-obraz interfejsu (`littlefs.bin`) pozostaje dla urządzeń bez dostępu do
-internetu: pobierz go ze strony
-[meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware) razem z
-firmware i wgraj w *Zarządzanie → Aktualizacja z pliku*, w polu **interfejs**.
-Przy aktualizacji z plików wgraj najpierw firmware, a po restarcie interfejs.
+pasujący do niego interfejs — nie trzeba aktualizować panelu osobno, i to jest
+dziś jedyna droga aktualizacji. Pole **interfejs** w *Zarządzanie → Aktualizacja
+z pliku* zostaje dla obrazów przekazanych bezpośrednio przez nas. Przy
+aktualizacji z plików wgraj najpierw firmware, a po restarcie interfejs.
 Odczyty i ustawienia zostają.
 
 ---
@@ -580,9 +579,9 @@ Na dole zakładki Ustawienia:
   sterowniki, klucze). Trzymaj go jako kopię zapasową.
 - **Import konfiguracji** — wgrywa wcześniej zapisany plik (np. po wymianie
   urządzenia lub przywróceniu).
-- **Aktualizacja z pliku (.bin)** — ręczne wgranie wydania pobranego z
-  [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware): wskaż
-  plik `firmware.bin` **i** podpis `.sig`, urządzenie zweryfikuje podpis
+- **Aktualizacja z pliku (.bin)** — ręczne wgranie wydania otrzymanego
+  bezpośrednio od nas (plików firmware nie udostępniamy do pobrania ze strony):
+  wskaż plik `firmware.bin` **i** podpis `.sig`, urządzenie zweryfikuje podpis
   wydania i po wgraniu się zrestartuje. Strona ma też drugie pole — **interfejs**
   (`littlefs.bin`, sam panel web) — używane przy aktualizacjach interfejsu.
   Ustawienia (liczniki, MQTT, hasło…) są zachowane.
