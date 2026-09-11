@@ -179,13 +179,6 @@ Przy każdym liczniku zobaczysz:
 Kliknij licznik, żeby otworzyć jego szczegóły: aktualny odczyt, zużycie,
 ostatnie pomiary i zakres min–max, a niżej **konfigurację**.
 
-Pod odczytami jest przycisk **Szczegóły**. Rozwija zdekodowaną ramkę w postaci
-JSON-a: pola nazwane tak samo, jak most publikuje je do MQTT i Home Assistanta,
-warstwa samej ramki (surowy hex, tryb, siła sygnału, tryb szyfrowania) i pełna
-lista rekordów DIF/VIF z bajtami. **Kopiuj JSON** wkleja to w całości — to
-najkrótsza droga, żeby pokazać komuś, co licznik faktycznie nadaje, przy
-zgłoszeniu nierozpoznanego licznika albo porównaniu z wmbusmeters.
-
 ### Numer licznika a jego zapis w telegramie
 Panel i logi pokazują numer licznika **normalnie** — tak, jak czytasz go z
 tarczy. Ale jeśli zajrzysz w **surową ramkę** (hex w zakładce „Logi" lub przy
@@ -499,7 +492,6 @@ Najważniejsze endpointy:
 | POST | `/api/config/import` | Wgranie zapisanej konfiguracji liczników |
 | POST | `/api/meter` | Dodanie/zmiana licznika — `{id, name, driver, key, active}` |
 | GET / DELETE | `/api/meter/<id>` | Odczyt / usunięcie pojedynczego licznika |
-| GET | `/api/meter/<id>/decoded` | Zdekodowana ramka licznika (to samo, co panel pokazuje pod „Szczegóły") |
 | POST | `/api/restart` | Restart urządzenia |
 
 Przykład — szybki podgląd statusu z komputera:
