@@ -844,6 +844,7 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 | Nie pamiętam hasła do panelu | Przywróć ustawienia fabryczne: trzymaj **przycisk** na urządzeniu przez **5 s**, aż dioda błyśnie trzy razy (rozdział 3). Skasuje to również liczniki i klucze AES — trzeba je wpisać na nowo. |
 | Dioda mruga „dwa błyski i przerwa", choć urządzenie ma być w moim Wi-Fi | Nie udało mu się połączyć, więc wystawił sieć `MeterRadioBridge-Setup` — połącz się z nią i sprawdź nazwę sieci oraz hasło (rozdział 2). Częsta przyczyna: sieć jest na paśmie 5 GHz albo router jest za daleko. |
 | Nie mogę zaktualizować firmware / wyeksportować konfiguracji (błąd 403) | Te funkcje **wymagają ustawionego hasła panelu** — ustaw je w *Ustawienia → Dostęp do panelu* i spróbuj ponownie. |
+| Wgrywam firmware z pliku i dostaję błąd 409 „same_version" | Ten plik ma tę samą wersję, co firmware już działające. Urządzenie trzyma dwa obrazy i zapisuje ten nieużywany — wgranie tej samej wersji drugi raz skasowałoby jedyny obraz, do którego mogłoby wrócić po nieudanej aktualizacji. Pobierz nowszą wersję. |
 | „Za dużo prób logowania" (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
 | Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
 | Zgubiłem Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
