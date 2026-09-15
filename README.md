@@ -1010,7 +1010,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
 | **`mkradio3`, `mkradio3a`, `mkradio4`, `mkradio4a`** | Techem MK Radio 3/4 | bez klucza |
-| **`izar`** | Diehl / IZAR / Sappel (SAP) / Hydrometer (PRIOS) | bez klucza |
+| **`izar`** | Diehl / IZAR / Sappel (SAP) / Hydrometer (PRIOS) | bez klucza; nakładka przeprogramowana: klucz PRIOS 🔒 |
 | **`apator162`** | Apator AT-WMBUS-16-2 | klucz zerowy wbudowany |
 | **`apatorna1`** | Apator NA-1 | indywidualny klucz AES 🔒 |
 | **`apator_water_b6`** | Apator AT-WMBUS (wodomierz, format 05/07 lub 08/07) | klucz zerowy wbudowany |
@@ -1053,6 +1053,14 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 > Techemy) nadaje **nieszyfrowane** mimo własnościowego formatu — urządzenie odczyta
 > je **bez klucza**. Pozostałe wymagają **klucza AES** (🔒), który dostajesz od
 > dostawcy/administratora liczników.
+>
+> **Diehl IZAR z własnym kluczem.** Nakładki IZAR fabrycznie działają bez
+> klucza. Wodociągi albo instalator mogą jednak ustawić w nich własny klucz
+> PRIOS. Licznik jest wtedy widoczny na liście, ale nie pokazuje stanu. Klucz
+> PRIOS ma 16 znaków hex, a pole w panelu przyjmuje 32, więc wpisz go **dwa
+> razy pod rząd** (np. `C0FFEE0123456789C0FFEE0123456789`). Wpisany klucz
+> zastępuje fabryczne: jeśli jest zły, licznik przestaje pokazywać stan, zamiast
+> wrócić do klucza fabrycznego. Działa od firmware 1.17.96.
 >
 > **Repeater w sieci?** Urządzenia infrastruktury (np. repeater Fidelix) urządzenie
 > rozpoznaje i oznacza — nie pomyli ich z licznikiem.
