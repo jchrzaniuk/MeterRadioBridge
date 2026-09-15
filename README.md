@@ -1059,8 +1059,9 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 > PRIOS. Licznik jest wtedy widoczny na liście, ale nie pokazuje stanu. Klucz
 > PRIOS ma 16 znaków hex, a pole w panelu przyjmuje 32, więc wpisz go **dwa
 > razy pod rząd** (np. `C0FFEE0123456789C0FFEE0123456789`). Wpisany klucz
-> zastępuje fabryczne: jeśli jest zły, licznik przestaje pokazywać stan, zamiast
-> wrócić do klucza fabrycznego. Działa od firmware 1.17.96.
+> zastępuje fabryczne. Jeśli jest zły, przy liczniku na liście pojawi się
+> czerwony trójkąt („Deszyfrowanie nieudane — sprawdź klucz"), a stan przestanie
+> się odświeżać — zostaje ostatni odczytany. Działa od firmware 1.17.97.
 >
 > **Repeater w sieci?** Urządzenia infrastruktury (np. repeater Fidelix) urządzenie
 > rozpoznaje i oznacza — nie pomyli ich z licznikiem.
