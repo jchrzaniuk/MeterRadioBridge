@@ -1035,6 +1035,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | **`bfw240radio`** | BFW (podzielnik radiowy) | bez klucza |
 | **`qcaloric`** | Qundis (kompakt CI=0x72; Caloric 5.5) | bez klucza |
 | **`apatoreitn`** | Apator EITN (podzielnik elektroniczny) | bez klucza |
+| **`apatoreitn40`** | Apator E-ITN 40 (wersje 09 i 0D) | bez klucza |
 
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
