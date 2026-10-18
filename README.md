@@ -1,6 +1,6 @@
 # MeterRadioBridge — instrukcja obsługi
 
-Gratulacje! Trzymasz w ręku **MeterRadioBridge** — gotowe urządzenie do
+**MeterRadioBridge** to gotowe urządzenie do
 **nasłuchiwania radiowych liczników** (wodomierzy, ciepłomierzy, gazomierzy,
 podzielników kosztów), które nadają w standardzie **wireless M-Bus (868 MHz)** —
 tym samym, którego używa większość liczników z odczytem radiowym w Polsce
@@ -36,8 +36,8 @@ kabla do komputera — robisz wszystko w przeglądarce.
 
 ### Krok 1 — podłącz zasilanie
 Podłącz urządzenie kablem USB-C. Po chwili odezwie się dioda LED: dwa błyski,
-sekundy przerwy i znowu dwa — to znaczy, że urządzenie wstało i wystawiło własną
-sieć konfiguracyjną. Co oznaczają pozostałe sposoby mrugania, opisuje rozdział 3.
+dwie sekundy przerwy i znowu dwa — to znaczy, że urządzenie wystartowało
+i utworzyło własną sieć konfiguracyjną. Co oznaczają pozostałe sposoby mrugania, opisuje rozdział 3.
 
 ### Krok 2 — połącz się z jego siecią konfiguracyjną
 Przy pierwszym uruchomieniu (lub gdy nie zna jeszcze Twojego Wi-Fi) urządzenie
@@ -82,9 +82,7 @@ IP urządzenia na liście klientów routera i wejdź pod `http://<adres-ip>`.
 
 ## 3. Przycisk i dioda LED
 
-Na urządzeniu jest **jeden przycisk** i **jedna dioda LED**. Ilekroć w tej
-instrukcji pada słowo „przycisk" albo „dioda LED", chodzi właśnie o nie — nie ma
-innych, więc nie ma czego mylić.
+Na urządzeniu jest **jeden przycisk** i **jedna dioda LED**.
 
 ### Co pokazuje dioda LED
 
@@ -124,7 +122,7 @@ Puszczenie przycisku przed upływem 5 sekund przerywa procedurę: nic nie zostaj
 skasowane, dioda wraca do zwykłego mrugania. Przypadkowe naciśnięcie jest więc
 nieszkodliwe.
 
-> ⚠️ **Reset kasuje wszystko, co ustawiłeś.** Przepadają: nazwa i hasło Twojego
+> ⚠️ **Reset kasuje wszystkie ustawienia.** Przepadają: nazwa i hasło Twojego
 > Wi-Fi, hasło do panelu, lista liczników razem z nazwami i **kluczami AES**,
 > ustawienia MQTT, webhooka, REST API i strefy czasowej oraz historia odczytów.
 > Zostaje wgrane oprogramowanie — reset **nie cofa** wersji firmware ani nie
@@ -153,15 +151,15 @@ Na dole są trzy zakładki:
 
 ---
 
-## 5. Zakładka „Liczniki"
+## 5. Zakładka „Liczniki”
 
 Każdy licznik, który urządzenie usłyszy, **pojawia się tu automatycznie** — nie
 musisz nic konfigurować, żeby go zobaczyć. Konfiguracja przydaje się, by nadać
 mu nazwę i (dla zaszyfrowanych) odczytać wartości.
 
 ### Wyszukiwanie i filtry
-Na górze listy jest pole **„Szukaj"** (filtruje po nazwie lub numerze licznika)
-oraz **filtry** — „pigułki" z liczbą sztuk: **Wszystkie**, **Skonfigurowane**
+Na górze listy jest pole **„Szukaj”** (filtruje po nazwie lub numerze licznika)
+oraz **filtry** — „pigułki” z liczbą sztuk: **Wszystkie**, **Skonfigurowane**
 i wg rodzaju: **Woda**, **Ciepła woda**, **Ciepło**, **HCA** (podzielniki),
 **Energia**, **Gaz**, **Czujniki**. Filtry rodzajowe pokazują się tylko wtedy,
 gdy masz takie liczniki. Kliknij pigułkę, by zawęzić listę.
@@ -181,7 +179,7 @@ ostatnie pomiary i zakres min–max, a niżej **konfigurację**.
 
 ### Numer licznika a jego zapis w telegramie
 Panel i logi pokazują numer licznika **normalnie** — tak, jak czytasz go z
-tarczy. Ale jeśli zajrzysz w **surową ramkę** (hex w zakładce „Logi" lub przy
+tarczy. Ale jeśli zajrzysz w **surową ramkę** (hex w zakładce „Logi” lub przy
 analizie), ten sam numer wygląda inaczej: jest zapisany **bajtami w odwrotnej
 kolejności** (kodowanie BCD, little-endian). To normalne dla wM-Bus, nie błąd.
 
@@ -200,22 +198,22 @@ patrząc bezpośrednio w bajty telegramu.
 > Drobiazg na później: u niektórych liczników za nadawanie odpowiada osobny
 > moduł radiowy z własnym numerem — wtedy na liście jako `id` widać numer
 > nadajnika, a numer z tarczy bywa przenoszony **w środku** telegramu (firmware
-> pokazuje go w logach jako „↳ licznik …"). Jeśli numery się nie zgadzają, to
+> pokazuje go w logach jako „↳ licznik …”). Jeśli numery się nie zgadzają, to
 > może być właśnie ten przypadek — porównaj, zanim uznasz licznik za obcy.
 
 ### Wodomierze Techem — dwie ramki z jednego licznika
 
 Wodomierze **Techem** to najczęstszy przypadek, w którym jeden licznik nadaje
 **dwie różne ramki**: jedną **niekodowaną** (jawną) i jedną **zaszyfrowaną**.
-Nie jest to błąd ani duplikat — to dwa równoległe „światy" tego samego modułu
-radiowego. Warto rozumieć, który numer skąd pochodzi, bo w grę wchodzą **trzy**
-identyfikatory naraz.
+Nie jest to błąd ani duplikat — to dwa równoległe „światy” tego samego modułu
+radiowego. Warto rozumieć, który numer skąd pochodzi, bo w grę wchodzą dwa numery
+i zaszyfrowana treść.
 
-**Trzy numery, które trzeba rozróżnić:**
+**Co trzeba rozróżnić:**
 
 | Numer | Skąd | Gdzie go widać |
 |---|---|---|
-| **Numer z tarczy** | wydrukowany na liczniku wody | na liście jako `dial` / „numer z tarczy" |
+| **Numer z tarczy** | wydrukowany na liczniku wody | na liście jako `dial` / „numer z tarczy” |
 | **ID modułu radiowego (DLL)** | nadany fabrycznie modułowi-nadajnikowi | na liście jako `id`, adres w nagłówku ramki |
 | — | (payload zaszyfrowany) | niedostępny bez klucza |
 
@@ -223,7 +221,7 @@ Moduł radiowy jest **fizycznie osobnym urządzeniem** doczepionym do wodomierza
 więc ma **własny numer**, inny niż ten z tarczy. Stąd biorą się dwa numery dla
 jednego licznika.
 
-**Jak wyglądają obie ramki — na Twoich rzeczywistych licznikach:**
+**Jak wyglądają obie ramki — na przykładzie dwóch prawdziwych wodomierzy:**
 
 ```
                           ┌─ RAMKA NIEKODOWANA (jawna) ────────────────┐
@@ -233,7 +231,7 @@ jednego licznika.
    tarcza 35205528  ──────┤  numer z tarczy NIE występuje w tej ramce │
    moduł  01411489        └───────────────────────────────────────────┘
                           ┌─ RAMKA KODOWANA (zaszyfrowana) ────────────┐
-                          │  tryb C1 · typ 0x37 „konwerter radiowy"   │
+                          │  tryb C1 · typ 0x37 „konwerter radiowy”   │
                           │  adres w ramce = ID MODUŁU (ten sam)      │
                           │  jawny nagłówek: NUMER Z TARCZY 35205528  │
                           │  payload: zaszyfrowany (mode 5) 🔒        │
@@ -259,15 +257,15 @@ Ten sam schemat dla ciepłej wody: tarcza **34541205** ↔ moduł **10279416**.
 
 > 🔒 **Klucza do ramki Techem nie da się odzyskać.** W odróżnieniu od niektórych
 > liczników z fabrycznym lub uproszczonym kluczem, Techem używa pełnego,
-> losowego klucza per licznik — bruteforce nie wchodzi w grę. Ale nie jest on
-> do niczego potrzebny: **cały odczyt masz z ramki jawnej**. Klucz zmieniłby coś
-> tylko, gdybyś chciał zajrzeć do zaszyfrowanego payloadu, a ten i tak najpewniej
+> losowego klucza, innego dla każdego licznika — odgadnięcie go nie wchodzi w grę. Ale nie jest on
+> do niczego potrzebny: **cały odczyt masz z ramki jawnej**. Klucz przydałby się
+> tylko do zajrzenia w zaszyfrowaną treść ramki, a ta i tak najpewniej
 > powtarza dane, które już widzisz.
 
 > **W skrócie:** jeśli na liście zobaczysz przy jednym wodomierzu Techem numer
 > `id` inny niż numer z tarczy — tak ma być. `id` to moduł radiowy, numer z
 > tarczy urządzenie dokłada z osobnej, rzadszej ramki zaszyfrowanej. Nie kasuj
-> „obcego" licznika, zanim nie sprawdzisz, czy to nie moduł Twojego własnego.
+> „obcego” licznika, zanim nie sprawdzisz, czy to nie moduł Twojego własnego.
 
 ### Konfiguracja licznika
 
@@ -275,22 +273,22 @@ W szczegółach licznika (lub przyciskiem **+ Dodaj licznik**, jeśli chcesz dod
 go ręcznie, zanim się odezwie) ustawiasz:
 
 - **ID licznika (8 cyfr)** — numer urządzenia (przy ręcznym dodawaniu).
-- **Nazwa** — przyjazna etykieta, np. „Zimna woda · łazienka".
+- **Nazwa** — przyjazna etykieta, np. „Zimna woda · łazienka”.
 - **Sterownik** — sposób dekodowania odczytów:
   - **auto (generyczny DIF/VIF)** — dobry domyślny wybór, działa dla większości
     standardowych liczników.
   - konkretny sterownik — wybierz, jeśli wiesz, jakiego producenta jest licznik
-    i „auto" nie pokazuje sensownych wartości.
+    i „auto” nie pokazuje sensownych wartości.
 - **Typ urządzenia** — np. Wodomierz (zimna/ciepła woda), Ciepłomierz, Gazomierz,
   Licznik energii elektrycznej, Podzielnik kosztów (HCA), Czujnik/inne. Wpływa
-  tylko na ikonę i opis; jeśli zostawisz „Nieznany", dostroi się z odebranej ramki.
+  tylko na ikonę i opis; jeśli zostawisz „Nieznany”, dostroi się z odebranej ramki.
 - **Klucz AES-128** — 32 znaki szesnastkowe (0–9, A–F). Wpisz, jeśli licznik
   nadaje zaszyfrowany (kłódka 🔒). Bez prawidłowego klucza wartości nie zostaną
   odczytane. Przycisk **Usuń zapisany klucz** czyści wcześniej zapisany klucz.
 
 > **Wodomierze Sensus iPerl (i pokrewne Itron)** — na tarczy numer bywa
-> wydrukowany z prefiksem, np. „8 SEN 2086 3703". Do pola **ID licznika** wpisz
-> po prostu osiem cyfr po oznaczeniu „SEN" (tu: `20863703`) — firmware sam
+> wydrukowany z prefiksem, np. „8 SEN 2086 3703”. Do pola **ID licznika** wpisz
+> po prostu osiem cyfr po oznaczeniu „SEN” (tu: `20863703`) — firmware sam
 > dopasuje je do ramki (nie odwracasz bajtów, nie przeliczasz na hex). iPerl ma
 > **wbudowany klucz fabryczny**, więc pola **Klucz AES** nie wypełniasz — licznik
 > czyta się automatycznie (sterownik `iperl`).
@@ -306,19 +304,19 @@ Zapisz przyciskiem **Dodaj licznik**. Licznik do usunięcia: **Usuń licznik**.
 
 ---
 
-## 6. Zakładka „Logi"
+## 6. Zakładka „Logi”
 
 Strumień **ostatnich odebranych ramek radiowych**. Najprostszy sposób sprawdzić,
 czy urządzenie w ogóle coś słyszy. U góry jest licznik ramek i przycisk
 **Wyczyść** (czyści tylko podgląd — nie kasuje liczników ani historii). Kropka
 przy ikonie zakładki sygnalizuje nowe ramki od ostatniego wejścia.
 
-Gdy lista jest pusta, urządzenie jeszcze nic nie odebrało — sprawdź antenę,
-**tryb radia** (Ustawienia → Radio) i ustawienie urządzenia względem liczników.
+Gdy lista jest pusta, urządzenie jeszcze nic nie odebrało — sprawdź antenę
+i ustawienie urządzenia względem liczników.
 
 ---
 
-## 7. Zakładka „Ustawienia"
+## 7. Zakładka „Ustawienia”
 
 Sekcje opisane w kolejności od góry panelu. Sekcja **Moduł MRB-P1** ma własny
 rozdział — patrz rozdział 8.
@@ -379,8 +377,8 @@ suma znaczy, zależy od rodzaju licznika:
 
 Jeśli taki ciepłomierz jest dodany do panelu Energia, raz w roku — po dniu
 rozliczeniowym — trzeba poprawić statystykę ręcznie: **Narzędzia deweloperskie →
-Statystyki → wybierz encję → Dostosuj sumę**. Encje „Energia poprz. okresu"
-i „Energia bież. okresu" są tylko informacyjne: mostek celowo nie tworzy dla
+Statystyki → wybierz encję → Dostosuj sumę**. Encje „Energia poprz. okresu”
+i „Energia bież. okresu” są tylko informacyjne: mostek celowo nie tworzy dla
 nich statystyk długoterminowych, więc nie da się ich (błędnie) dodać do panelu
 Energia.
 
@@ -475,7 +473,7 @@ nazwanego licznika — przydatne do własnych skryptów/systemów.
 ### REST API
 **Włącz REST API**, by odpytywać urządzenie z własnych skryptów/systemów. Adresy
 zaczynają się od `http://meterradiobridge.local` (lub adresu IP), a odpowiedzi są w formacie
-**JSON**. Jeśli ustawiłeś hasło panelu, zapytania wymagają go (HTTP Basic Auth,
+**JSON**. Jeśli panel ma hasło, zapytania też go wymagają (HTTP Basic Auth,
 np. `curl -u użytkownik:hasło ...`).
 
 Najważniejsze endpointy:
@@ -484,7 +482,7 @@ Najważniejsze endpointy:
 |---|---|---|
 | GET | `/api/status` | Stan urządzenia: wersja, czas pracy, Wi-Fi, NTP oraz `diag` (liczniki ramek, błędów, CRC, nieudanych deszyfrowań, duplikatów, resetów) |
 | GET | `/api/meters` | Lista wykrytych liczników z ostatnimi odczytami, sygnałem i statusem |
-| GET | `/api/drivers` | Lista dostępnych sterowników (do pola „Sterownik") |
+| GET | `/api/drivers` | Lista dostępnych sterowników (do pola „Sterownik”) |
 | GET | `/api/frames` | Ostatnie surowe ramki radiowe (podgląd/diagnostyka) |
 | GET | `/api/settings` | Bieżące ustawienia urządzenia |
 | GET | `/api/wifi_scan` | Skan sieci Wi-Fi w zasięgu |
@@ -508,7 +506,7 @@ nic wybierać ani przełączać — liczniki T1 (np. wodomierze) i C1 (np. podzi
 ciepła Qundis) są łapane razem, bez utraty ramek.
 
 ### Alerty MQTT
-- **Alert „licznik zaginął" — godziny** — po ilu godzinach ciszy wysłać alert,
+- **Alert „licznik zaginął” — godziny** — po ilu godzinach ciszy wysłać alert,
   że licznik przestał nadawać (`0` = wyłączone). Wymaga włączonego MQTT i nadanej
   nazwy licznika; alert idzie na temat `{prefix}/{id}/alert`.
 
@@ -529,7 +527,7 @@ Dwa z tych pól ostrzegają, zanim zauważysz brak odczytów:
 - **Liczniki** pokazują zapełnienie listy, np. `37 / 64`. Urządzenie pamięta
   najwyżej 64 liczniki, a w bloku łapie też liczniki sąsiadów. Gdy lista jest
   pełna, nowy licznik wchodzi na miejsce wpisu **bez nazwy i klucza**, który
-  milczy ponad 6 godzin — liczniki, którym nadałeś nazwę, nigdy nie są
+  milczy ponad 6 godzin — liczniki z nadaną nazwą nigdy nie są
   usuwane automatycznie. Jeśli pole zrobi się pomarańczowe, usuń z listy
   liczniki, których nie potrzebujesz.
 - **Odbiór radiowy** pokazuje `✓ OK`, dopóki spływają ramki. Gdy przez pół
@@ -556,8 +554,9 @@ O instalacji zawsze decydujesz Ty.
 Każde wydanie jest **podpisane cyfrowo** — urządzenie odrzuci obraz uszkodzony
 albo podmieniony.
 
-> 🌐 **Urządzenie w sieci bez internetu?** Od 6 września 2026 nie udostępniamy
-> plików firmware do pobrania — aktualizacje idą wyłącznie przez OTA. Jeśli
+> 🌐 **Urządzenie w sieci bez internetu?** Od 6 września 2026 starsze mostki
+> aktualizują się wyłącznie przez OTA, a pliki do pobrania są tylko dla mostków
+> gen-2 ([meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware)). Jeśli
 > mostek nie ma dostępu do internetu, napisz do nas; pomożemy zaktualizować go
 > w inny sposób. Pole *Zarządzanie → Aktualizacja z pliku* zostaje w panelu
 > i działa, ale plik musisz otrzymać od nas.
@@ -580,7 +579,7 @@ Na dole zakładki Ustawienia:
 - **Import konfiguracji** — wgrywa wcześniej zapisany plik (np. po wymianie
   urządzenia lub przywróceniu).
 - **Aktualizacja z pliku (.bin)** — ręczne wgranie wydania otrzymanego
-  bezpośrednio od nas (plików firmware nie udostępniamy do pobrania ze strony):
+  bezpośrednio od nas (dla mostków gen-2 pliki są na [meterradiobridge.pl/firmware](https://meterradiobridge.pl/firmware)):
   wskaż plik `firmware.bin` **i** podpis `.sig`, urządzenie zweryfikuje podpis
   wydania i po wgraniu się zrestartuje. Strona ma też drugie pole — **interfejs**
   (`littlefs.bin`, sam panel web) — używane przy aktualizacjach interfejsu.
@@ -608,7 +607,7 @@ konfiguracji* go przywraca — jednym kliknięciem. Plik trzymaj w bezpiecznym
 miejscu (zawiera klucze AES). **Wymaga ustawionego hasła panelu** (*Dostęp do
 panelu*) — bez niego eksport/import są zablokowane (ochrona kluczy).
 
-**2. Przypominanie o kopii (przełącznik „Przypominaj o kopii", domyślnie WŁ.).**
+**2. Przypominanie o kopii (przełącznik „Przypominaj o kopii”, domyślnie WŁ.).**
 Po dodaniu/zmianie licznika panel przypomni Ci o zrobieniu kopii. Możesz wyłączyć
 w *Ustawienia → Kopia zapasowa*.
 
@@ -623,11 +622,11 @@ wiadomość z brokera/Home Assistant i importując).
 > - **klucze AES opuszczają urządzenie** i trafiają na broker, i to **trwale**
 >   (wiadomość retained zostaje, dopóki jej nie skasujesz),
 > - **każdy z dostępem do brokera uzyskuje te klucze** — a więc może odczytywać
->   dane Twoich liczników (zużycie), a w pewnych scenariuszach je podszywać,
+>   dane Twoich liczników (zużycie), a w niektórych sytuacjach podszyć się pod licznik,
 > - na **publicznym lub źle zabezpieczonym brokerze oznacza to wyciek kluczy**.
 >
 > Włączaj **wyłącznie** na **własnym, zaufanym, zabezpieczonym** brokerze:
-> z uwierzytelnianiem i listami ACL, najlepiej po **TLS**, **nieeksponowanym do
+> z uwierzytelnianiem i listami ACL, najlepiej po **TLS**, **niedostępnym z
 > internetu**. Przy włączaniu panel poprosi o potwierdzenie tego ryzyka.
 >
 > **Wyłączenie:** po wyłączeniu przełącznika i restarcie urządzenie czyści
@@ -635,7 +634,7 @@ wiadomość z brokera/Home Assistant i importując).
 > zalogować/zreplikować — w razie wątpliwości rozważ wymianę kluczy w licznikach.
 
 Jeśli nie masz pewności — **nie włączaj kopii do MQTT** i korzystaj z eksportu
-ręcznego. Daje tę samą ochronę bez wystawiania kluczy poza urządzenie.
+ręcznego. Kopia jest ta sama, a klucze nie trafiają na broker.
 
 ### Factory reset (przywrócenie ustawień fabrycznych)
 W panelu nie ma takiego przycisku — ustawienia fabryczne przywraca się
@@ -720,7 +719,7 @@ sam numer, pod którym moduł pojawi się później w zakładce **Liczniki**.
 
 Panel ma jeszcze przycisk **Wczytaj kartę recovery**, który przyjmuje plik JSON
 i wypełnia wszystkie trzy pola naraz. To ścieżka serwisowa — plik powstaje przy
-produkcji modułu i zwykle nie trafia do klienta. Jeśli go dostałeś, użyj go
+produkcji modułu i zwykle nie trafia do klienta. Jeśli go masz, użyj go
 zamiast kroków 1–3.
 
 > Jeden most obsługuje jeden moduł. Jeżeli spróbujesz sparować drugi, panel
@@ -765,7 +764,7 @@ ich w kopii konfiguracji mostu.
 
 ### Stan modułu
 
-Karta **Stan MRB-P1** odpowiada na pytanie „czy to w ogóle działa". Przycisk
+Karta **Stan MRB-P1** odpowiada na pytanie „czy to w ogóle działa”. Przycisk
 **Sprawdź teraz** odpytuje moduł od razu, bez czekania na kolejny heartbeat.
 
 Wiersz **Łączność** ma sześć wartości:
@@ -785,7 +784,7 @@ restart**, **Sygnał radiowy**, **Ramki P1 poprawne / odebrane**, **Błędy P1:
 transport / szyfr / tag / zapis NVS**, **Radio: nadane / odrzucone / awarie**
 oraz **Konfiguracja EK/AK**.
 
-Rozdzielenie „poprawne / odebrane" mówi więcej niż sama liczba odczytów. Ramki
+Rozdzielenie „poprawne / odebrane” mówi więcej niż sama liczba odczytów. Ramki
 odbierane, ale nieodszyfrowane, wskazują na klucze; brak odbieranych w ogóle —
 na port albo przewód.
 
@@ -810,7 +809,7 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 
 | Problem | Co zrobić |
 |---|---|
-| Panel pokazuje tylko formularz parowania | Moduł nie jest sparowany. Wczytaj kartę recovery i kliknij **Sparuj moduł**. Przy wpisywaniu kluczy przed parowaniem zobaczysz **Najpierw sparuj moduł MRB-P1 z tym mostem**. |
+| Panel pokazuje tylko formularz parowania | Moduł nie jest sparowany. Wpisz dane z metryczki (krok 1) i kliknij **Sparuj moduł**. Przy wpisywaniu kluczy przed parowaniem zobaczysz **Najpierw sparuj moduł MRB-P1 z tym mostem**. |
 | **Moduł nie potwierdził parowania** | Trzy przyczyny, w tej kolejności: kody QR wklejone w odwrotne pola (patrz ostrzeżenie w kroku 1), moduł bez zasilania albo za daleko, metryczka od innego egzemplarza. |
 | **Karta recovery jest niekompletna albo uszkodzona** | Wczytany plik JSON nie ma wszystkich trzech wartości. Przepisz dane z metryczki ręcznie albo zeskanuj kody. |
 | **Moduł nie potwierdził odebrania kluczy** | Moduł nie odpowiedział na przekazanie konfiguracji. Sprawdź zasilanie i zasięg, potem spróbuj ponownie. |
@@ -839,40 +838,40 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 |---|---|
 | Nie widzę żadnych liczników | Daj kilka–kilkanaście minut (niektóre liczniki nadają rzadko, nawet raz na godzinę). Sprawdź, czy antena jest dokręcona, i ustaw urządzenie bliżej liczników. T1 i C1 są nasłuchiwane jednocześnie — trybu nie trzeba zmieniać. |
 | Licznik widoczny, ale bez odczytów, z kłódką 🔒 | Jest zaszyfrowany — wpisz **Klucz AES-128** w jego konfiguracji. |
-| Wartości wyglądają bez sensu | Zmień **Sterownik** z „auto" na właściwy dla producenta, albo sprawdź **Typ urządzenia**. |
+| Wartości wyglądają bez sensu | Zmień **Sterownik** z „auto” na właściwy dla producenta, albo sprawdź **Typ urządzenia**. |
 | `meterradiobridge.local` nie otwiera się | Wejdź po adresie IP urządzenia (znajdziesz go na liście klientów routera). |
 | Nie pamiętam hasła do panelu | Przywróć ustawienia fabryczne: trzymaj **przycisk** na urządzeniu przez **5 s**, aż dioda błyśnie trzy razy (rozdział 3). Skasuje to również liczniki i klucze AES — trzeba je wpisać na nowo. |
-| Dioda mruga „dwa błyski i przerwa", choć urządzenie ma być w moim Wi-Fi | Nie udało mu się połączyć, więc wystawił sieć `MeterRadioBridge-Setup` — połącz się z nią i sprawdź nazwę sieci oraz hasło (rozdział 2). Częsta przyczyna: sieć jest na paśmie 5 GHz albo router jest za daleko. |
+| Dioda mruga „dwa błyski i przerwa”, choć urządzenie ma być w moim Wi-Fi | Nie udało mu się połączyć, więc utworzyło sieć `MeterRadioBridge-Setup` — połącz się z nią i sprawdź nazwę sieci oraz hasło (rozdział 2). Częsta przyczyna: sieć jest na paśmie 5 GHz albo router jest za daleko. |
 | Nie mogę zaktualizować firmware / wyeksportować konfiguracji (błąd 403) | Te funkcje **wymagają ustawionego hasła panelu** — ustaw je w *Ustawienia → Dostęp do panelu* i spróbuj ponownie. |
-| Wgrywam firmware z pliku i dostaję błąd 409 „same_version" | Ten plik ma tę samą wersję, co firmware już działające. Urządzenie trzyma dwa obrazy i zapisuje ten nieużywany — wgranie tej samej wersji drugi raz skasowałoby jedyny obraz, do którego mogłoby wrócić po nieudanej aktualizacji. Pobierz nowszą wersję. |
-| „Za dużo prób logowania" (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
+| Wgrywam firmware z pliku i dostaję błąd 409 „same_version” | Ten plik ma tę samą wersję, co firmware już działające. Urządzenie trzyma dwa obrazy i zapisuje ten nieużywany — wgranie tej samej wersji drugi raz skasowałoby jedyny obraz, do którego mogłoby wrócić po nieudanej aktualizacji. Pobierz nowszą wersję. |
+| „Za dużo prób logowania” (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
 | Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
-| Zgubiłem Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
-| MQTT z TLS nie łączy się (a bez TLS działa) | 1) Sprawdź port (TLS zwykle **8883**). 2) Sprawdź NTP (*System* → `NTP: ✓ OK`) — weryfikacja certyfikatu wymaga poprawnego czasu. 3) Jeśli łączysz się **po adresie IP** z własnym CA: adres musi być w certyfikacie serwera wpisany w SAN **także jako DNS** (patrz przepis w sekcji MQTT po TLS); objaw po stronie brokera to `bad certificate` w logu. 4) Upewnij się, że wkleiłeś CA **brokera**, nie inny certyfikat — pod polem widać nazwę i odcisk zaufanego CA. |
+| Urządzenie zgubiło Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
+| MQTT z TLS nie łączy się (a bez TLS działa) | 1) Sprawdź port (TLS zwykle **8883**). 2) Sprawdź NTP (*System* → `NTP: ✓ OK`) — weryfikacja certyfikatu wymaga poprawnego czasu. 3) Jeśli łączysz się **po adresie IP** z własnym CA: adres musi być w certyfikacie serwera wpisany w SAN **także jako DNS** (patrz przepis w sekcji MQTT po TLS); objaw po stronie brokera to `bad certificate` w logu. 4) Sprawdź, czy w polu jest CA **brokera**, nie inny certyfikat — pod polem widać nazwę i odcisk zaufanego CA. |
 
 ---
 
 ## 10. Nierozpoznany licznik? Pomóż ulepszyć dekodowanie
 
 Czasem licznik jest **widoczny** (urządzenie odbiera jego ramki), ale:
-- pokazuje **„Inny"/brak sterownika** i żadnych odczytów, albo
+- pokazuje **„Inny”/brak sterownika** i żadnych odczytów, albo
 - pokazuje **bezsensowne wartości** mimo wybranego sterownika.
 
 To znaczy, że dla tego konkretnego modelu nie mamy jeszcze poprawnego dekodera.
-Możesz pomóc go dorobić — i to **bardzo skutecznie**, bo najlepszym materiałem do
+Możesz pomóc go dorobić. Najlepszym materiałem do
 napisania dekodera są **prawdziwe ramki z prawdziwego licznika wraz ze stanem
 z jego tarczy**. Z takich zgłoszeń budujemy bazę testową, dzięki której kolejne
 wersje firmware rozpoznają coraz więcej liczników.
 
 > 💡 **Najważniejsza rzecz:** odczyt **z tarczy/wyświetlacza licznika** (np.
-> `123,456 m³`) zapisany razem z **datą i godziną**. To „punkt odniesienia",
+> `123,456 m³`) zapisany razem z **datą i godziną**. To „punkt odniesienia”,
 > bez którego ramka jest tylko ciągiem bajtów — a z nim da się rozłożyć ją na
 > czynniki i napisać dekoder. Jeśli licznik ma kilka pól (np. stan bieżący
 > i rozliczeniowy), spisz wszystkie.
 
 Zanim zbierzesz materiał, zajrzyj do [macierzy zgodności](https://meterradiobridge.pl/zgodnosc). Część modeli ma
-tam opisany status — od „potrzebny klucz indywidualny" po „format własnościowy,
-nieobsługiwany" — więc od razu widać, czy brakuje dekodera, czy tylko klucza.
+tam opisany status — od „potrzebny klucz indywidualny” po „format własnościowy,
+nieobsługiwany” — więc od razu widać, czy brakuje dekodera, czy tylko klucza.
 
 ### Co zebrać
 
@@ -903,7 +902,7 @@ curl http://meterradiobridge.local/api/frames > ramki.json
 ```
 
 Plik zawiera listę ostatnich ramek; każda ma m.in. pola:
-- `id_str` — numer licznika (po nim rozpoznasz „swój"),
+- `id_str` — numer licznika (po nim rozpoznasz „swój”),
 - `mfr`, `type` — producent i typ urządzenia,
 - `enc` — czy zaszyfrowana, `parsed` — czy się zdekodowała,
 - `raw_hex` — **surowa ramka** (to jest najważniejsze).
@@ -912,7 +911,7 @@ Powtórz pobranie po jakimś czasie i dołącz kilka plików — wtedy widać, j
 zmieniają się wartości (to bardzo pomaga w odgadnięciu, który bajt jest licznikiem).
 
 > Jeśli `meterradiobridge.local` nie działa, użyj adresu IP urządzenia (lista klientów
-> routera albo Ustawienia). Gdy ustawiłeś hasło panelu, dodaj `-u użytkownik:hasło`.
+> routera albo Ustawienia). Gdy panel ma hasło, dodaj `-u użytkownik:hasło`.
 
 ### Gdzie zgłosić — załóż issue na GitHubie
 
@@ -925,7 +924,7 @@ Zgłoszenia o nieczytających się / nierozpoznanych licznikach przyjmujemy jako
 W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 
 1. **Ramki hex** — wklej zawartość pliku `ramki.json` albo same wartości `raw_hex`
-   (możesz w bloku kodu \`\`\` … \`\`\`).
+   (najlepiej w bloku kodu Markdowna).
 2. **Odczyt z tarczy** licznika **+ data i godzina** odczytu.
 3. **Model licznika** z naklejki: producent, model, numer seryjny.
 4. *(opcjonalnie)* **klucz AES**, jeśli licznik jest zaszyfrowany — patrz uwaga
@@ -942,7 +941,7 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 - **Klucza AES NIE wklejaj do publicznego issue.** To sekret Twojego licznika —
   pozwala odczytać wszystkie jego transmisje. Bez klucza też pomożesz (ramka +
   model i odczyt z tarczy). Jeśli dekoder będzie wymagał klucza, poprosimy
-  o przesłanie go **kanałem prywatnym** (np. wiadomość prywatna na GitHubie).
+  o przesłanie go **kanałem prywatnym** (np. e-mailem na kontakt@meterradiobridge.pl).
 - **Numer seryjny** bywa wrażliwy — możesz go pominąć lub zamazać; producent
   i model wystarczą do rozpoznania.
 
@@ -966,8 +965,8 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
 Urządzenie ma wbudowany zestaw **sterowników** rozpoznających liczniki różnych
 producentów. Dla większości standardowych liczników (Kamstrup, Landis+Gyr, Sensus,
 Diehl i inne nadające zgodnie z normą EN 13757) wystarcza **auto (generyczny
-DIF/VIF)** — po odszyfrowaniu czyta je bez dedykowanego sterownika. Konkretny
-sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto" nie pokazuje sensownych
+DIF/VIF)** — po odszyfrowaniu czyta je bez osobnego sterownika. Konkretny
+sterownik z listy poniżej wybierz dopiero wtedy, gdy „auto” nie pokazuje sensownych
 wartości (sekcja 5 → *Sterownik*). Pełną, aktualną listę masz zawsze w panelu (pole
 *Sterownik*) oraz pod `GET /api/drivers`.
 
@@ -977,18 +976,19 @@ wartości (sekcja 5 → *Sterownik*). Pełną, aktualną listę masz zawsze w pa
 > prawdziwą ramką, a co dopiero czeka na próbkę. Jest tam też osobna tabela
 > B METERS oraz lista urządzeń, których dziś nie odczytamy.
 
-### ✅ Czytane automatycznie (sterownik „auto", bez wyboru)
+### ✅ Czytane automatycznie (sterownik „auto”, bez wyboru)
 
 Liczniki nadające zgodnie z normą **EN 13757** urządzenie czyta **samo**, bez
 wybierania sterownika — jawne od razu, **zaszyfrowane po wpisaniu klucza AES**
-(sekcja 5). Poniżej rodziny i modele potwierdzone, że działają na „auto" (większość
-zweryfikowana realnymi ramkami). To **nie wymaga** żadnego z dedykowanych
+(sekcja 5). Poniżej rodziny i modele potwierdzone, że działają na „auto” (większość
+zweryfikowana realnymi ramkami). To **nie wymaga** żadnego z osobnych
 sterowników z dalszej części.
 
 | Medium | Producent / model | Klucz |
 |---|---|---|
 | 💧 Woda | **Minol / Zenner** (Minomess), **Sontex** (Supercom 587), **Qundis / Zenner** (QWater 5.5) | bez klucza |
 | 💧 Woda | **Axioma** (Qalcosonic), Kamstrup, Sensus, Diehl i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
+| 💧 Woda | **Apator Naxom** (OP-04, OP-04-1a, OP-04-1b) | indywidualny 🔒 |
 | 🔥 Ciepło | **Landis+Gyr** (UltraHeat T550 / UH50), **Qundis** (QHeat 5.5) | bez klucza |
 | 🔥 Ciepło | Kamstrup (Multical), Techem / L+G (OEM) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Gaz | **Elster / Honeywell**, **Diehl** (Aerius) | bez klucza |
@@ -996,14 +996,13 @@ sterowników z dalszej części.
 | 🌡️ HCA | **Sontex** (868) | bez klucza |
 
 > Jeśli Twojego producenta nie ma na liście, a licznik nadaje wg EN 13757 (większość
-> nowych liczników radiowych) — i tak zostanie odczytany na „auto". Dedykowane
+> nowych liczników radiowych) — i tak zostanie odczytany na „auto”. Osobne
 > sterowniki poniżej są tylko dla formatów **własnościowych**, gdzie sam EN nie
 > wystarcza.
 
 ---
 
-Poniżej **dedykowane sterowniki** do formatów własnościowych (gdzie sam EN nie
-wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych licznikach.**
+Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych licznikach.**
 🔒 = wymaga klucza AES licznika (od dostawcy/administratora).
 
 ### 💧 Woda (wodomierze)
@@ -1017,7 +1016,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 | **`apator172`** | Apator AT-WMBUS-17-2 (nakładka JS-02 Smart+/C+) | bez klucza w potwierdzonym wariancie |
 | **`iperl`** | Sensus iPerl | klucz fabryczny (wbudowany) |
 | **`hydrus`** | Diehl Hydrus | klucz fabryczny (auto); per-instalacja 🔒 |
-| **`bmt`** | BMeters Hydrodigit | bez klucza (auto) |
+| **`bmt`** | B METERS Hydrodigit | bez klucza (auto) |
 | `istawater` | ista | 🔒 |
 
 ### 🔥 Ciepło (ciepłomierze)
@@ -1025,7 +1024,7 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 |---|---|---|
 | **`compact5`, `vario451`** | Techem | bez klucza |
 | **`sharky`** | Diehl Sharky | klucz fabryczny |
-| **`bmt`** | BMeters (Hydrocal M3) | bez klucza |
+| **`bmt`** | B METERS (Hydrocal M3) | bez klucza |
 | standard EN | Techem / Landis+Gyr (OEM) | jawne: bez; szyfrowane: 🔒 |
 
 ### 🌡️ Podzielniki kosztów ciepła (HCA)
@@ -1048,9 +1047,9 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 |---|---|---|
 | **`unismart`** | Apator UniSmart / Amiteq | bez klucza (auto) |
 | **`apator08`** | Apator (gazomierz/wodomierz, format 08) | bez klucza |
-| standard EN „1A" | Apator / Apt (jawne) | bez klucza |
+| standard EN „1A” | Apator / Apt (jawne) | bez klucza |
 
-> **Klucze:** część liczników (Diehl/Sappel PRIOS, wodne Apatora, BMeters, niektóre
+> **Klucze:** część liczników (Diehl/Sappel PRIOS, wodne Apatora, B METERS, niektóre
 > Techemy) nadaje **nieszyfrowane** mimo własnościowego formatu — urządzenie odczyta
 > je **bez klucza**. Pozostałe wymagają **klucza AES** (🔒), który dostajesz od
 > dostawcy/administratora liczników.
@@ -1060,15 +1059,15 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
 > PRIOS. Licznik jest wtedy widoczny na liście, ale nie pokazuje stanu. Klucz
 > PRIOS ma 16 znaków hex, a pole w panelu przyjmuje 32, więc wpisz go **dwa
 > razy pod rząd** (np. `C0FFEE0123456789C0FFEE0123456789`). Wpisany klucz
-> zastępuje fabryczne. Jeśli jest zły, przy liczniku na liście pojawi się
-> czerwony trójkąt („Deszyfrowanie nieudane — sprawdź klucz"), a stan przestanie
+> zastępuje fabryczny. Jeśli jest zły, przy liczniku na liście pojawi się
+> czerwony trójkąt („Deszyfrowanie nieudane — sprawdź klucz”), a stan przestanie
 > się odświeżać — zostaje ostatni odczytany. Działa od firmware 1.17.97.
 >
-> **Repeater w sieci?** Urządzenia infrastruktury (np. repeater Fidelix) urządzenie
-> rozpoznaje i oznacza — nie pomyli ich z licznikiem.
+> **Wzmacniak w sieci?** Urządzenia infrastruktury (np. wzmacniak Fidelix)
+> MeterRadioBridge rozpoznaje i oznacza — nie pomyli ich z licznikiem.
 >
 > Lista rośnie z każdą aktualizacją firmware — jeśli Twojego licznika brakuje, patrz
-> sekcja 10 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie").
+> sekcja 10 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie”).
 
 ---
 
@@ -1079,12 +1078,12 @@ wystarcza), w podziale na medium. **Pogrubione = potwierdzone na realnych liczni
   jednocześnie. T1 to najczęstszy tryb wodomierzy, C1 m.in. podzielniki Qundis.
 - **id (adres nadawcy)** — numer identyfikujący nadawcę w telegramie. Zwykle
   równy numerowi na liczniku; gdy nadaje osobny moduł radiowy, to numer modułu,
-  a numer z tarczy bywa w środku telegramu (patrz „↳ licznik" / `tplid`).
+  a numer z tarczy bywa w środku telegramu (patrz „↳ licznik” / `tplid`).
 - **AES-128** — szyfrowanie transmisji; klucz to 32 znaki szesnastkowe.
 - **Sterownik (driver)** — sposób interpretacji danych konkretnego producenta.
 - **RSSI** — siła odbieranego sygnału w dBm (bliżej 0 = mocniejszy).
 - **MQTT** — protokół do przesyłania danych m.in. do Home Assistant.
-- **OTA** — bezprzewodowa aktualizacja oprogramowania, przez przeglądarkę.
+- **OTA** — aktualizacja oprogramowania przez sieć, uruchamiana z panelu.
 
 ---
 
