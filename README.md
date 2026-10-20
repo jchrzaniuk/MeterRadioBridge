@@ -8,7 +8,7 @@ i Europie.
 
 Urządzenie łapie ich transmisje, odszyfrowuje je (o ile masz klucz) i pokazuje
 odczyty w panelu — na telefonie albo komputerze. Dane może też przekazywać dalej:
-do Home Assistant przez MQTT lub do własnego systemu przez webhook.
+do Home Assistanta przez MQTT lub do własnego systemu przez webhook.
 
 Firmware jest już wgrany. Ta instrukcja poprowadzi Cię przez uruchomienie i po
 kolei przez wszystkie funkcje. Nie instalujesz żadnego programu, nie podłączasz
@@ -344,21 +344,21 @@ użytkownika = brak hasła (każdy w sieci ma dostęp do podglądu i ustawień).
 Sieć, z którą łączy się urządzenie. Tu też zmienisz ją na inną (**Skan otoczenia**
 pomaga wybrać). Po zmianie urządzenie się zrestartuje.
 
-### MQTT (integracja z Home Assistant)
-Pozwala wysyłać odczyty do **Home Assistant** lub innego brokera MQTT.
+### MQTT (integracja z Home Assistantem)
+Pozwala wysyłać odczyty do **Home Assistanta** lub innego brokera MQTT.
 - **Włącz MQTT** — przełącznik.
 - **Host / IP**, **Port** (zwykle 1883; z TLS zwykle 8883), **Użytkownik**, **Hasło** — dane brokera.
 - **TLS / SSL** i **Certyfikat CA (PEM)** — szyfrowanie połączenia, opis niżej.
 - **Prefix** — początek tematów MQTT (np. `wmbus`).
 - **Alerty MQTT** — dodatkowe powiadomienia.
 
-Po włączeniu liczniki z nadaną nazwą pojawią się w Home Assistant automatycznie
+Po włączeniu liczniki z nadaną nazwą pojawią się w Home Assistancie automatycznie
 (autodiscovery) jako encje — nie trzeba nic dopisywać w konfiguracji HA.
 
 Zmiany ustawień MQTT stosują się **od razu, bez restartu urządzenia** — mostek
 sam rozłącza się i łączy z nowymi parametrami.
 
-### Zużycia okresowe a stan liczydła (statystyki w Home Assistant)
+### Zużycia okresowe a stan liczydła (statystyki w Home Assistancie)
 
 Część liczników Techem nie nadaje przez radio stanu liczydła wprost, tylko dwie
 liczby związane z okresem rozliczeniowym — a mostek publikuje ich sumę. Co ta
@@ -562,15 +562,19 @@ albo podmieniony.
 > i działa, ale plik musisz otrzymać od nas.
 
 Od wersji 1.16.85 instalacja OTA uruchamiana z panelu pobiera razem firmware i
-pasujący do niego interfejs — nie trzeba aktualizować panelu osobno, i to jest
-dziś jedyna droga aktualizacji. Pole **interfejs** w *Zarządzanie → Aktualizacja
-z pliku* zostaje dla obrazów przekazanych bezpośrednio przez nas. Przy
+pasujący do niego interfejs, więc panelu nie aktualizujesz osobno. Pole
+**interfejs** w *Zarządzanie → Aktualizacja z pliku* służy przy aktualizacji
+z plików (ze strony dla gen-2 albo otrzymanych od nas). Przy
 aktualizacji z plików wgraj najpierw firmware, a po restarcie interfejs.
 Odczyty i ustawienia zostają.
 
 ---
 
 ### Zarządzanie (kopie, aktualizacja, reset)
+
+> 🔐 **Eksport, import i aktualizacja firmware wymagają ustawionego hasła panelu**
+> (*Ustawienia → Dostęp do panelu*). Bez hasła te funkcje są zablokowane (błąd
+> 403) — to ochrona kluczy AES i przed wgraniem obcego oprogramowania.
 
 Na dole zakładki Ustawienia:
 
@@ -586,22 +590,14 @@ Na dole zakładki Ustawienia:
   Ustawienia (liczniki, MQTT, hasło…) są zachowane.
 - **Uruchom ponownie** — zwykły restart.
 
-> 🔐 **Eksport, import i aktualizacja firmware wymagają ustawionego hasła panelu**
-> (*Ustawienia → Dostęp do panelu*). Bez hasła te funkcje są zablokowane (błąd
-> 403) — to ochrona kluczy AES i przed wgraniem obcego oprogramowania. Ustaw
-> hasło, żeby z nich korzystać.
-
-### Konfiguracja jest bezpieczna
-Twoje ustawienia liczników (nazwy, klucze) są zapisane w trwałej pamięci
-urządzenia i **przeżywają restart oraz aktualizację firmware**. Mimo to warto od
-czasu do czasu zrobić **Eksport konfiguracji** — to Twoja kopia na wszelki wypadek.
-
 ### Kopia zapasowa i bezpieczeństwo
 
-Konfiguracja liczników (nazwy, sterowniki, **klucze AES**) jest cenna — warto
-mieć jej kopię. Masz trzy mechanizmy; pierwszy wystarcza większości użytkowników.
+Konfiguracja liczników (nazwy, sterowniki, **klucze AES**) leży w trwałej pamięci
+urządzenia i **przeżywa restart oraz aktualizację firmware**. Kopia przyda się,
+gdy urządzenie się zepsuje, zginie albo przywrócisz ustawienia fabryczne. Masz
+trzy sposoby; pierwszy wystarcza większości użytkowników.
 
-**1. Eksport / import ręczny (zalecane).** W *Ustawienia → Zarządzanie*:
+**1. Eksport i import ręczny (zalecane).** W *Ustawienia → Zarządzanie*:
 *Eksport konfiguracji* pobiera plik `.json` (na telefon/komputer), *Import
 konfiguracji* go przywraca — jednym kliknięciem. Plik trzymaj w bezpiecznym
 miejscu (zawiera klucze AES). **Wymaga ustawionego hasła panelu** (*Dostęp do
@@ -615,7 +611,7 @@ w *Ustawienia → Kopia zapasowa*.
 Po włączeniu urządzenie publikuje całą konfigurację jako wiadomość *retained* na
 temat `{prefix}/_backup/config`. Broker przechowuje ostatnią wersję, więc kopia
 żyje poza urządzeniem i przetrwa nawet jego wymianę (przywracasz, wczytując tę
-wiadomość z brokera/Home Assistant i importując).
+wiadomość z brokera albo z Home Assistanta i importując).
 
 > ⚠️ **ZAGROŻENIE BEZPIECZEŃSTWA — przeczytaj przed włączeniem.**
 > Konfiguracja zawiera **klucze AES Twoich liczników**. Włączając kopię do MQTT:
@@ -636,13 +632,10 @@ wiadomość z brokera/Home Assistant i importując).
 Jeśli nie masz pewności — **nie włączaj kopii do MQTT** i korzystaj z eksportu
 ręcznego. Kopia jest ta sama, a klucze nie trafiają na broker.
 
-### Factory reset (przywrócenie ustawień fabrycznych)
-W panelu nie ma takiego przycisku — ustawienia fabryczne przywraca się
-**przyciskiem na urządzeniu**: wciskasz go i trzymasz przez **5 sekund**, aż
-dioda LED błyśnie trzy razy i urządzenie się zrestartuje. Kasuje to wszystkie
-ustawienia, liczniki (z kluczami AES) i historię, a urządzenie wraca do sieci
-`MeterRadioBridge-Setup` jak przy pierwszym uruchomieniu. Krok po kroku i co
-dokładnie ginie — **rozdział 3**.
+### Przywrócenie ustawień fabrycznych (factory reset)
+W panelu nie ma takiego przycisku. Ustawienia fabryczne przywraca **przycisk na
+urządzeniu**, wciśnięty przez 5 sekund. Reset kasuje ustawienia, liczniki
+(z kluczami AES) i historię. Krok po kroku — **rozdział 3**.
 
 ---
 
@@ -650,11 +643,11 @@ dokładnie ginie — **rozdział 3**.
 
 Liczniki energii elektrycznej często nie nadają przez radio, za to mają
 przewodowy port **P1** (gniazdo RJ12) do odczytu lokalnego. MRB-P1 to osobne
-urządzenie, które podłączasz do tego portu; odczyty przekazuje do mostu drogą
-radiową. Most traktuje je jak każdy inny licznik — pojawia się w zakładce
-**Liczniki**, trafia do MQTT i do Home Assistant na tych samych zasadach.
+urządzenie, które podłączasz do tego portu; odczyty przekazuje do mostka drogą
+radiową. Mostek traktuje je jak każdy inny licznik — pojawia się w zakładce
+**Liczniki**, trafia do MQTT i do Home Assistanta na tych samych zasadach.
 
-Wszystko ustawiasz w panelu mostu, w **Ustawienia → Moduł MRB-P1**. Do samego
+Wszystko ustawiasz w panelu mostka, w **Ustawienia → Moduł MRB-P1**. Do samego
 modułu nie podłączasz komputera i niczego w nim nie wpisujesz.
 
 > 🔐 **Najpierw ustaw hasło panelu** (rozdział 7 → *Dostęp do panelu*).
@@ -676,13 +669,13 @@ wniosku. Każdy ma 32 znaki szesnastkowe, czyli 16 bajtów.
 
 **Metryczkę urządzenia.** To kartonik wielkości wizytówki, dołączony do MRB-P1
 w pudełku. Znajdziesz na nim numer urządzenia, identyfikator, kod parowania
-i **dwa kody QR**. Bez metryczki nie sparujesz modułu z mostem — trzymaj ją przy
+i **dwa kody QR**. Bez metryczki nie sparujesz modułu z mostkiem — trzymaj ją przy
 dokumentacji, tak jak klucze, i nie zostawiaj przy urządzeniu.
 
 > Metryczka z **kodami QR** należy do MRB-P1. Każde urządzenie ma własną, więc
 > nie mieszaj ich ze sobą — kody z jednej nie sparują drugiego.
 
-### Krok 1 — sparuj moduł z mostem
+### Krok 1 — sparuj moduł z mostkiem
 
 Otwórz **Ustawienia → Moduł MRB-P1**. Dopóki moduł nie jest sparowany, panel
 pokazuje formularz parowania.
@@ -714,7 +707,7 @@ wartości ręcznie — po lewej stronie metryczki, pod nagłówkami **IDENTYFIKA
 URZĄDZENIA (DEVICE ID)** i **KOD PAROWANIA**, stoją te same znaki w grupach po
 cztery. Spacje możesz pominąć albo wpisać, to bez różnicy.
 
-Most sparuje wyłącznie urządzenie zgodne z metryczką. Numer urządzenia to ten
+Mostek sparuje wyłącznie urządzenie zgodne z metryczką. Numer urządzenia to ten
 sam numer, pod którym moduł pojawi się później w zakładce **Liczniki**.
 
 Panel ma jeszcze przycisk **Wczytaj kartę recovery**, który przyjmuje plik JSON
@@ -722,7 +715,7 @@ i wypełnia wszystkie trzy pola naraz. To ścieżka serwisowa — plik powstaje 
 produkcji modułu i zwykle nie trafia do klienta. Jeśli go masz, użyj go
 zamiast kroków 1–3.
 
-> Jeden most obsługuje jeden moduł. Jeżeli spróbujesz sparować drugi, panel
+> Jeden mostek obsługuje jeden moduł. Jeżeli spróbujesz sparować drugi, panel
 > odmówi: **bridge already has a paired MRB-P1; local recovery required**.
 > Zmiana wymaga lokalnej procedury recovery na module.
 
@@ -760,7 +753,7 @@ faktycznie włączył port, czy przewód siedzi w gnieździe i czy EK z AK nie
 zamieniły się miejscami.
 
 Klucze wpisujesz w jedną stronę. Panel nie pokaże ich ponownie i nie umieszcza
-ich w kopii konfiguracji mostu.
+ich w kopii konfiguracji mostka.
 
 ### Stan modułu
 
@@ -776,7 +769,7 @@ Wiersz **Łączność** ma sześć wartości:
 | **Dane P1 nieaktualne** | moduł odpowiada, lecz od ponad 3 minut nie odczytał poprawnej ramki |
 | **Brak kluczy** | moduł odpowiada, ale nie ma ani aktywnej, ani testowej konfiguracji EK/AK |
 | **Brak kontaktu** | moduł nie odpowiedział — sprawdź jego zasilanie i zasięg |
-| **Brak danych** | most jeszcze o nic nie pytał; naciśnij **Sprawdź teraz** |
+| **Brak danych** | mostek jeszcze o nic nie pytał; naciśnij **Sprawdź teraz** |
 
 Pozostałe wiersze przydają się przy zgłaszaniu problemu: **Ostatni kontakt**,
 **Ostatni poprawny odczyt P1**, **Firmware MRB-P1**, **Czas pracy**, **Ostatni
@@ -825,9 +818,9 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
   sprzedawcy urządzenia i nie pokazuj na zrzutach ekranu.
 - Metryczkę trzymaj razem z dokumentacją urządzenia, nie przy module. Kody QR
   niosą kod parowania — kto je sfotografuje, ten może sparować moduł z innym
-  mostem.
-- Kopia konfiguracji mostu nie zawiera kluczy P1 ani kodu parowania.
-- Przywrócenie ustawień fabrycznych mostu (rozdział 3) kasuje również parowanie
+  mostkiem.
+- Kopia konfiguracji mostka nie zawiera kluczy P1 ani kodu parowania.
+- Przywrócenie ustawień fabrycznych mostka (rozdział 3) kasuje również parowanie
   z modułem. Po nim trzeba je wykonać od nowa, z metryczką.
 
 ---
@@ -1082,7 +1075,7 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 - **AES-128** — szyfrowanie transmisji; klucz to 32 znaki szesnastkowe.
 - **Sterownik (driver)** — sposób interpretacji danych konkretnego producenta.
 - **RSSI** — siła odbieranego sygnału w dBm (bliżej 0 = mocniejszy).
-- **MQTT** — protokół do przesyłania danych m.in. do Home Assistant.
+- **MQTT** — protokół do przesyłania danych m.in. do Home Assistanta.
 - **OTA** — aktualizacja oprogramowania przez sieć, uruchamiana z panelu.
 
 ---
