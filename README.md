@@ -88,7 +88,7 @@ Na urządzeniu jest **jeden przycisk** i **jedna dioda LED**.
 
 | Dioda | Co się dzieje |
 |---|---|
-| powoli rozjaśnia się i gaśnie, jak oddech (cykl ok. 6 s) | praca normalna — urządzenie jest w Twoim Wi-Fi i nasłuchuje liczników |
+| powoli rozjaśnia się i przygasa (cykl ok. 6 s) | praca normalna — urządzenie jest w Twoim Wi-Fi i nasłuchuje liczników |
 | dwa błyski, potem ok. 2 s ciemno — i tak w kółko | urządzenie wystawia własną sieć `MeterRadioBridge-Setup`: albo nie zna jeszcze Twojego Wi-Fi, albo nie potrafi się do niego połączyć |
 | szybkie miganie, kilka razy na sekundę | trzymasz przycisk — trwa odliczanie do przywrócenia ustawień fabrycznych |
 | trzy szybkie błyski i restart | ustawienia fabryczne przywrócone |
@@ -99,9 +99,7 @@ w zakładce **Logi**.
 
 ### Co robi przycisk
 
-Krótkie naciśnięcie **nie robi nic** i tak ma być. (Dawniej przełączało tryb
-radia, ale T1 i C1 są dziś nasłuchiwane jednocześnie, więc nie ma czego
-przełączać — patrz rozdział 7 → *Radio*.) Przycisk służy do jednej rzeczy:
+Krótkie naciśnięcie nie robi nic. Przycisk służy wyłącznie do
 **przywrócenia ustawień fabrycznych**.
 
 ### Przywrócenie ustawień fabrycznych (factory reset)
@@ -130,10 +128,8 @@ nieszkodliwe.
 
 > 💾 **Zanim zresetujesz, zrób kopię.** *Ustawienia → Zarządzanie → Eksport
 > konfiguracji* zapisuje liczniki i klucze do pliku, a po resecie wracają jednym
-> kliknięciem (*Import konfiguracji*). Jest tu haczyk: jeśli resetujesz właśnie
-> dlatego, że **nie pamiętasz hasła panelu**, to eksport jest niedostępny (wymaga
-> zalogowania) i klucze AES trzeba będzie wpisać ręcznie jeszcze raz. Warto
-> trzymać kopię zawczasu.
+> kliknięciem (*Import konfiguracji*). Eksport wymaga zalogowania — bez hasła
+> panelu kopii nie zrobisz i klucze AES trzeba będzie wpisać ponownie.
 
 Jeśli chcesz tylko zrestartować urządzenie, a nie czyścić ustawień, użyj
 *Ustawienia → Zarządzanie → **Uruchom ponownie***. Przycisk takiej funkcji nie ma.
@@ -195,7 +191,7 @@ adresu i odwracasz ich kolejność. Urządzenie robi to za Ciebie, więc na liś
 i w odczytach masz już numer w czytelnej postaci; odwrócony zapis zobaczysz tylko
 patrząc bezpośrednio w bajty telegramu.
 
-> Drobiazg na później: u niektórych liczników za nadawanie odpowiada osobny
+> U niektórych liczników za nadawanie odpowiada osobny
 > moduł radiowy z własnym numerem — wtedy na liście jako `id` widać numer
 > nadajnika, a numer z tarczy bywa przenoszony **w środku** telegramu (firmware
 > pokazuje go w logach jako „↳ licznik …”). Jeśli numery się nie zgadzają, to
@@ -205,11 +201,7 @@ patrząc bezpośrednio w bajty telegramu.
 
 Wodomierze **Techem** to najczęstszy przypadek, w którym jeden licznik nadaje
 **dwie różne ramki**: jedną **niekodowaną** (jawną) i jedną **zaszyfrowaną**.
-Nie jest to błąd ani duplikat — to dwa równoległe „światy” tego samego modułu
-radiowego. Warto rozumieć, który numer skąd pochodzi, bo w grę wchodzą dwa numery
-i zaszyfrowana treść.
-
-**Co trzeba rozróżnić:**
+To nie błąd ani duplikat. Jeden licznik ma dwa numery:
 
 | Numer | Skąd | Gdzie go widać |
 |---|---|---|
@@ -255,12 +247,9 @@ Ten sam schemat dla ciepłej wody: tarcza **34541205** ↔ moduł **10279416**.
   **numer z tarczy** do sparowania. Co niesie jej payload — nie wiadomo i bez
   klucza się nie dowiemy (patrz niżej).
 
-> 🔒 **Klucza do ramki Techem nie da się odzyskać.** W odróżnieniu od niektórych
-> liczników z fabrycznym lub uproszczonym kluczem, Techem używa pełnego,
-> losowego klucza, innego dla każdego licznika — odgadnięcie go nie wchodzi w grę. Ale nie jest on
-> do niczego potrzebny: **cały odczyt masz z ramki jawnej**. Klucz przydałby się
-> tylko do zajrzenia w zaszyfrowaną treść ramki, a ta i tak najpewniej
-> powtarza dane, które już widzisz.
+> 🔒 **Klucza do ramki zaszyfrowanej Techem nie da się odzyskać** — każdy
+> licznik ma własny, losowy klucz. Nie jest potrzebny: **cały odczyt masz
+> z ramki jawnej**.
 
 > **W skrócie:** jeśli na liście zobaczysz przy jednym wodomierzu Techem numer
 > `id` inny niż numer z tarczy — tak ma być. `id` to moduł radiowy, numer z
@@ -511,8 +500,8 @@ ciepła Qundis) są łapane razem, bez utraty ramek.
   nazwy licznika; alert idzie na temat `{prefix}/{id}/alert`.
 
 ### Strefa czasowa
-- **Strefa** — żeby czasy w panelu były lokalne. (Do systemów zewnętrznych dane
-  wychodzą zawsze w czasie uniwersalnym UTC — to celowe i prawidłowe.)
+- **Strefa** — żeby czasy w panelu były lokalne. Do systemów zewnętrznych dane
+  wychodzą zawsze w UTC.
 
 ### System (informacje)
 Pola **tylko do odczytu** — bieżący stan urządzenia: **Wersja** oprogramowania,
@@ -656,13 +645,9 @@ modułu nie podłączasz komputera i niczego w nim nie wpisujesz.
 
 ### Co przygotować
 
-**Aktywny port P1.** Gniazdo bywa fizycznie obecne, ale wyłączone — operator
-włącza je na wniosek. W Stoen służy do tego „Wniosek o uruchomienie / wyłączenie
-interfejsu lokalnego licznika zdalnego odczytu"; aktywacja jest bezpłatna, a
-operator zastrzega na nią do dwóch miesięcy. Złóż wniosek, zanim zaczniesz
-montaż.
+**Aktywny port P1.** Port włącza OSD na wniosek. Złóż go przed montażem.
 
-**Klucze EK i AK.** Dane z portu P1 są zaszyfrowane. Operator wydaje do nich
+**Klucze EK i AK.** Dane z portu P1 są zaszyfrowane. OSD wydaje do nich
 dwa różne sekrety: **EK** (klucz szyfrujący) i **AK** (klucz uwierzytelniający,
 którym moduł sprawdza, czy ramka jest prawdziwa). Poproś o oba w tym samym
 wniosku. Każdy ma 32 znaki szesnastkowe, czyli 16 bajtów.
@@ -836,7 +821,7 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 | Nie pamiętam hasła do panelu | Przywróć ustawienia fabryczne: trzymaj **przycisk** na urządzeniu przez **5 s**, aż dioda błyśnie trzy razy (rozdział 3). Skasuje to również liczniki i klucze AES — trzeba je wpisać na nowo. |
 | Dioda mruga „dwa błyski i przerwa”, choć urządzenie ma być w moim Wi-Fi | Nie udało mu się połączyć, więc utworzyło sieć `MeterRadioBridge-Setup` — połącz się z nią i sprawdź nazwę sieci oraz hasło (rozdział 2). Częsta przyczyna: sieć jest na paśmie 5 GHz albo router jest za daleko. |
 | Nie mogę zaktualizować firmware / wyeksportować konfiguracji (błąd 403) | Te funkcje **wymagają ustawionego hasła panelu** — ustaw je w *Ustawienia → Dostęp do panelu* i spróbuj ponownie. |
-| Wgrywam firmware z pliku i dostaję błąd 409 „same_version” | Ten plik ma tę samą wersję, co firmware już działające. Urządzenie trzyma dwa obrazy i zapisuje ten nieużywany — wgranie tej samej wersji drugi raz skasowałoby jedyny obraz, do którego mogłoby wrócić po nieudanej aktualizacji. Pobierz nowszą wersję. |
+| Wgrywam firmware z pliku i dostaję błąd 409 „same_version” | Ta wersja już działa na urządzeniu. Wgraj nowszą. |
 | „Za dużo prób logowania” (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
 | Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
 | Urządzenie zgubiło Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
@@ -850,17 +835,13 @@ Czasem licznik jest **widoczny** (urządzenie odbiera jego ramki), ale:
 - pokazuje **„Inny”/brak sterownika** i żadnych odczytów, albo
 - pokazuje **bezsensowne wartości** mimo wybranego sterownika.
 
-To znaczy, że dla tego konkretnego modelu nie mamy jeszcze poprawnego dekodera.
-Możesz pomóc go dorobić. Najlepszym materiałem do
-napisania dekodera są **prawdziwe ramki z prawdziwego licznika wraz ze stanem
-z jego tarczy**. Z takich zgłoszeń budujemy bazę testową, dzięki której kolejne
-wersje firmware rozpoznają coraz więcej liczników.
+Dla tego modelu nie ma jeszcze dekodera. Do jego napisania potrzebne są
+**ramki z licznika wraz ze stanem z jego tarczy**.
 
 > 💡 **Najważniejsza rzecz:** odczyt **z tarczy/wyświetlacza licznika** (np.
-> `123,456 m³`) zapisany razem z **datą i godziną**. To „punkt odniesienia”,
-> bez którego ramka jest tylko ciągiem bajtów — a z nim da się rozłożyć ją na
-> czynniki i napisać dekoder. Jeśli licznik ma kilka pól (np. stan bieżący
-> i rozliczeniowy), spisz wszystkie.
+> `123,456 m³`) zapisany razem z **datą i godziną**. Bez niego ramki nie da się
+> zinterpretować. Jeśli licznik ma kilka pól (np. stan bieżący i rozliczeniowy),
+> spisz wszystkie.
 
 Zanim zbierzesz materiał, zajrzyj do [macierzy zgodności](https://meterradiobridge.pl/zgodnosc). Część modeli ma
 tam opisany status — od „potrzebny klucz indywidualny” po „format własnościowy,
@@ -900,8 +881,8 @@ Plik zawiera listę ostatnich ramek; każda ma m.in. pola:
 - `enc` — czy zaszyfrowana, `parsed` — czy się zdekodowała,
 - `raw_hex` — **surowa ramka** (to jest najważniejsze).
 
-Powtórz pobranie po jakimś czasie i dołącz kilka plików — wtedy widać, jak
-zmieniają się wartości (to bardzo pomaga w odgadnięciu, który bajt jest licznikiem).
+Powtórz pobranie po kilku godzinach i dołącz kilka plików, żeby wartości
+się różniły.
 
 > Jeśli `meterradiobridge.local` nie działa, użyj adresu IP urządzenia (lista klientów
 > routera albo Ustawienia). Gdy panel ma hasło, dodaj `-u użytkownik:hasło`.
@@ -914,7 +895,7 @@ Zgłoszenia o nieczytających się / nierozpoznanych licznikach przyjmujemy jako
 > 🐙 **[github.com/jchrzaniuk/MeterRadioBridge/issues](https://github.com/jchrzaniuk/MeterRadioBridge/issues)**
 > → przycisk **New issue**. Potrzebne jest darmowe konto GitHub.
 
-W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
+W zgłoszeniu dołącz:
 
 1. **Ramki hex** — wklej zawartość pliku `ramki.json` albo same wartości `raw_hex`
    (najlepiej w bloku kodu Markdowna).
@@ -937,10 +918,6 @@ W zgłoszeniu dołącz (im więcej, tym szybciej powstanie dekoder):
   o przesłanie go **kanałem prywatnym** (np. e-mailem na kontakt@meterradiobridge.pl).
 - **Numer seryjny** bywa wrażliwy — możesz go pominąć lub zamazać; producent
   i model wystarczą do rozpoznania.
-
-> 🙌 Dzięki takim zgłoszeniom lista wspieranych liczników rośnie. Każdy nowy,
-> potwierdzony odczytem z tarczy egzemplarz trafia do testów i zostaje wsparty
-> w kolejnych aktualizacjach firmware (OTA).
 
 ---
 
@@ -1032,7 +1009,7 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
-| **`amiplus`** | Iskra IE.5 / Apator / Elgama GAMA | EGM (Tauron/PGE): 🔒 |
+| **`amiplus`** | Iskra IE.5 / Apator / Elgama GAMA | 🔒 od OSD |
 | `omnipower` | Kamstrup OmniPower | 🔒 |
 
 ### 🔥 Gaz (gazomierze)
@@ -1059,8 +1036,7 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 > **Wzmacniak w sieci?** Urządzenia infrastruktury (np. wzmacniak Fidelix)
 > MeterRadioBridge rozpoznaje i oznacza — nie pomyli ich z licznikiem.
 >
-> Lista rośnie z każdą aktualizacją firmware — jeśli Twojego licznika brakuje, patrz
-> sekcja 10 („Nierozpoznany licznik? Pomóż ulepszyć dekodowanie”).
+> Jeśli Twojego licznika brakuje, patrz sekcja 10.
 
 ---
 
