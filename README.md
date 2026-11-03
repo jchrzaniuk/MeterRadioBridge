@@ -961,10 +961,12 @@ sterowników z dalszej części.
 
 | Medium | Producent / model | Klucz |
 |---|---|---|
-| 💧 Woda | **Minol / Zenner** (Minomess), **Sontex** (Supercom 587), **Qundis / Zenner** (QWater 5.5) | bez klucza |
+| 💧 Woda | **Minol / Zenner** (Minomess), **Sontex** (Supercom 587) | bez klucza |
+| 💧 Woda | **Qundis / Zenner** (QWater 5.5) | jawne: bez; szyfrowane: 🔒 |
 | 💧 Woda | **Axioma** (Qalcosonic), Kamstrup, Sensus, Diehl i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 💧 Woda | **Apator Naxom** (OP-04, OP-04-1a, OP-04-1b) | indywidualny 🔒 |
-| 🔥 Ciepło | **Landis+Gyr** (UltraHeat T550 / UH50), **Qundis** (QHeat 5.5) | bez klucza |
+| 🔥 Ciepło | **Landis+Gyr** (UltraHeat T550 / UH50) | bez klucza |
+| 🔥 Ciepło | **Qundis** (QHeat 5.5) | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Ciepło | Kamstrup (Multical), Techem / L+G (OEM) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Gaz | **Elster / Honeywell**, **Diehl** (Aerius) | bez klucza |
 | ⚡ Energia | **ABB** (B23 / B24) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
@@ -1007,7 +1009,7 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 |---|---|---|
 | **`fhkvdataiii`, `fhkvdataiv`** | Techem FHKV | iii: bez; iv: 🔒 |
 | **`bfw240radio`** | BFW (podzielnik radiowy) | bez klucza |
-| **`qcaloric`** | Qundis (kompakt CI=0x72; Caloric 5.5) | bez klucza |
+| **`qcaloric`** | Qundis (kompakt CI=0x72; Caloric 5.5) | jawne: bez; szyfrowane: 🔒 |
 | **`apatoreitn`** | Apator EITN (podzielnik elektroniczny) | bez klucza |
 | **`apatoreitn40`** | Apator E-ITN 40 (wersje 09 i 0D) | bez klucza |
 
