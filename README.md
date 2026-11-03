@@ -300,6 +300,11 @@ czy urządzenie w ogóle coś słyszy. U góry jest licznik ramek i przycisk
 **Wyczyść** (czyści tylko podgląd — nie kasuje liczników ani historii). Kropka
 przy ikonie zakładki sygnalizuje nowe ramki od ostatniego wejścia.
 
+Przycisk **Kopiuj** umieszcza w schowku wersję firmware i wszystkie ramki z
+listy, gotowe do wklejenia w mailu do pomocy technicznej. Kopia nie zawiera
+kluczy AES ani haseł, ale zawiera numery liczników odebranych w okolicy, także
+cudzych.
+
 Gdy lista jest pusta, urządzenie jeszcze nic nie odebrało — sprawdź antenę
 i ustawienie urządzenia względem liczników.
 
