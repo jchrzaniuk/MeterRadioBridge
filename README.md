@@ -499,6 +499,13 @@ ich **jednocześnie** i samo rozpoznaje tryb każdej odebranej ramki. Nie musisz
 nic wybierać ani przełączać — liczniki T1 (np. wodomierze) i C1 (np. podzielniki
 ciepła Qundis) są łapane razem, bez utraty ramek.
 
+**Filtr odbiornika.** Do wyboru są trzy szerokości: 156 kHz (domyślna),
+234 kHz i 312 kHz. Najwięcej odczytów daje 156 kHz. Szerszy filtr wybierz
+tylko wtedy, gdy licznik jest w zasięgu, a odbiera się rzadko: może nadawać
+trochę obok swojej częstotliwości. Szerszy filtr przepuszcza też więcej szumu,
+więc najsłabsze liczniki mogą odbierać się gorzej. Po zapisaniu zmiany
+urządzenie się restartuje. Wynik porównaj po dobie w kolumnie ramek licznika.
+
 ### Alerty MQTT
 - **Alert „licznik zaginął” — godziny** — po ilu godzinach ciszy wysłać alert,
   że licznik przestał nadawać (`0` = wyłączone). Wymaga włączonego MQTT i nadanej
