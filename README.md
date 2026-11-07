@@ -1023,7 +1023,7 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
-| **`amiplus`** | Iskra IE.5 / Apator / Elgama GAMA | 🔒 od OSD |
+| **`amiplus`** | Iskra IE.5 / Apator / Elgama GAMA / Sanxing S34U28 (Tauron) | 🔒 od OSD |
 | `omnipower` | Kamstrup OmniPower | 🔒 |
 
 ### 🔥 Gaz (gazomierze)
