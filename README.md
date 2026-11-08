@@ -349,6 +349,13 @@ Pozwala wysyłać odczyty do **Home Assistanta** lub innego brokera MQTT.
 Po włączeniu liczniki z nadaną nazwą pojawią się w Home Assistancie automatycznie
 (autodiscovery) jako encje — nie trzeba nic dopisywać w konfiguracji HA.
 
+Encja licznika pokazuje ostatni odczyt także wtedy, gdy licznik długo milczy.
+Niektóre moduły nadają tylko w dni robocze w godzinach pracy (tak ustawiają je
+wodociągi albo administrator), więc w nocy i w weekend nowych odczytów nie ma.
+Od firmware 1.17.156 encje takich liczników nie przechodzą wtedy w stan
+„niedostępne”. Gdy wyłączy się sam mostek, Home Assistant oznaczy jego encje
+jako niedostępne.
+
 Zmiany ustawień MQTT stosują się **od razu, bez restartu urządzenia** — mostek
 sam rozłącza się i łączy z nowymi parametrami.
 
@@ -1020,6 +1027,17 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 | **`apatoreitn`** | Apator EITN (podzielnik elektroniczny) | bez klucza |
 | **`apatoreitn40`** | Apator E-ITN 40 (wersje 09 i 0D) | bez klucza |
 
+> **Podzielniki Techem FHKV wersji 94** nadają pod jednym numerem dwie ramki:
+> jawną (stan bieżący, poprzedni i temperatury) oraz zaszyfrowaną (stan
+> bieżący, klucz od Techem). Bez klucza urządzenie czyta ramkę jawną. Po
+> wpisaniu klucza obie ramki składają się w jeden licznik: stan główny pochodzi
+> z ramki zaszyfrowanej, a temperatury i stan poprzedni z jawnej. Działa od
+> firmware 1.17.156; wcześniej druga ramka była odrzucana jako „inny licznik
+> o tym samym numerze”, a wynik zależał od tego, która przyszła pierwsza. Po
+> aktualizacji stan główny takiego podzielnika z kluczem może jednorazowo
+> skoczyć o kilka jednostek, bo wcześniej mógł pochodzić z migawki w ramce
+> jawnej.
+
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
@@ -1046,6 +1064,18 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 > zastępuje fabryczny. Jeśli jest zły, przy liczniku na liście pojawi się
 > czerwony trójkąt („Deszyfrowanie nieudane — sprawdź klucz”), a stan przestanie
 > się odświeżać — zostaje ostatni odczytany. Działa od firmware 1.17.97.
+>
+> **Diehl IZAR z modułem DME.** Część nakładek IZAR nadaje jako producent DME,
+> a numer modułu zaczyna się w ramce od bajtów `78 07` albo `78 06`. Od firmware
+> 1.17.156 urządzenie rozpoznaje je samo i czyta sterownikiem `izar`, bez
+> wybierania sterownika i bez klucza. Wcześniej nie były odczytywane.
+>
+> **Liczniki z dwoma rodzajami ramek.** Niektóre liczniki nadają na zmianę dwie
+> ramki o różnej zawartości, np. jedną ze stanem bieżącym, drugą ze stanem na
+> dzień rozliczenia. Od firmware 1.17.156 urządzenie łączy wartości z obu: nowa
+> ramka podmienia tylko swoje pola, a pola z drugiej ramki zostają, dopóki są
+> świeże (do 72 godzin). U podzielników kosztów (HCA) stanem głównym jest
+> odczyt bieżący. Wartość na dzień rozliczenia nie zostaje stanem głównym.
 >
 > **Wzmacniak w sieci?** Urządzenia infrastruktury (np. wzmacniak Fidelix)
 > MeterRadioBridge rozpoznaje i oznacza — nie pomyli ich z licznikiem.
