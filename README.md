@@ -1034,9 +1034,8 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 > z ramki zaszyfrowanej, a temperatury i stan poprzedni z jawnej. Działa od
 > firmware 1.17.156; wcześniej druga ramka była odrzucana jako „inny licznik
 > o tym samym numerze”, a wynik zależał od tego, która przyszła pierwsza. Po
-> aktualizacji stan główny takiego podzielnika z kluczem może jednorazowo
-> skoczyć o kilka jednostek, bo wcześniej mógł pochodzić z migawki w ramce
-> jawnej.
+> aktualizacji stan główny takiego podzielnika z kluczem może się jednorazowo
+> zmienić, bo teraz zawsze pochodzi z ramki zaszyfrowanej.
 
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
@@ -1067,8 +1066,8 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 >
 > **Diehl IZAR z modułem DME.** Część nakładek IZAR nadaje jako producent DME,
 > a numer modułu zaczyna się w ramce od bajtów `78 07` albo `78 06`. Od firmware
-> 1.17.156 urządzenie rozpoznaje je samo i czyta sterownikiem `izar`, bez
-> wybierania sterownika i bez klucza. Wcześniej nie były odczytywane.
+> 1.17.156 urządzenie rozpoznaje je samo i odczytuje, bez wybierania
+> sterownika i bez klucza. Wcześniej były widoczne na liście bez stanu.
 >
 > **Liczniki z dwoma rodzajami ramek.** Niektóre liczniki nadają na zmianę dwie
 > ramki o różnej zawartości, np. jedną ze stanem bieżącym, drugą ze stanem na
