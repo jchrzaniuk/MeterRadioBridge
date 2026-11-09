@@ -153,6 +153,20 @@ Każdy licznik, który urządzenie usłyszy, **pojawia się tu automatycznie** �
 musisz nic konfigurować, żeby go zobaczyć. Konfiguracja przydaje się, by nadać
 mu nazwę i (dla zaszyfrowanych) odczytać wartości.
 
+Lista ma dwie grupy (od firmware 1.17.162):
+
+- **Skonfigurowane** — liczniki zapisane w urządzeniu: z nazwą, kluczem albo
+  wybranym sterownikiem. Urządzenie zapisze najwyżej 64 liczniki i nigdy nie
+  usuwa ich samo. Do MQTT, Home Assistanta, webhooka i eksportu Prometheus
+  trafiają odczyty liczników z nazwą.
+- **Wykryte** — wszystko inne, co słychać w okolicy, także liczniki sąsiadów.
+  Przy każdym widać numer, rodzaj, sygnał i odczyt główny, jeśli licznik nadaje
+  jawnie. Po nim poznasz swój licznik. Wykryte nie mają historii ani
+  szczegółowych rekordów. Urządzenie pamięta ich najwyżej 128. Gdy przychodzi
+  nowy, z listy wypada ten, który najdawniej się odezwał. Po restarcie ta grupa
+  jest pusta i wypełnia się w miarę, jak liczniki nadają. Licznik nadający
+  rzadko pojawi się dopiero po swojej ramce.
+
 ### Wyszukiwanie i filtry
 Na górze listy jest pole **„Szukaj”** (filtruje po nazwie lub numerze licznika)
 oraz **filtry** — „pigułki” z liczbą sztuk: **Wszystkie**, **Skonfigurowane**
@@ -282,7 +296,13 @@ go ręcznie, zanim się odezwie) ustawiasz:
 > **wbudowany klucz fabryczny**, więc pola **Klucz AES** nie wypełniasz — licznik
 > czyta się automatycznie (sterownik `iperl`).
 
-Zapisz przyciskiem **Dodaj licznik**. Licznik do usunięcia: **Usuń licznik**.
+Zapisz przyciskiem **Dodaj licznik**. Urządzenie od razu odczytuje ostatnią
+ramkę tego licznika, więc wartości albo komunikat o złym kluczu zobaczysz bez
+czekania na kolejną transmisję. Licznik do usunięcia: **Usuń licznik**.
+
+Gdy zapisanych liczników jest już 64, panel pokaże komunikat „Limit zapisanych
+liczników” i nie doda kolejnego. Usuń licznik, którego nie potrzebujesz,
+i spróbuj ponownie.
 
 > 🔑 **Skąd wziąć klucz AES?** Od administratora/dostawcy liczników (spółdzielnia,
 > firma rozliczeniowa, producent). Urządzenie samo nie złamie szyfrowania —
@@ -482,7 +502,7 @@ Najważniejsze endpointy:
 | Metoda | Adres | Opis |
 |---|---|---|
 | GET | `/api/status` | Stan urządzenia: wersja, czas pracy, Wi-Fi, NTP oraz `diag` (liczniki ramek, błędów, CRC, nieudanych deszyfrowań, duplikatów, resetów) |
-| GET | `/api/meters` | Lista wykrytych liczników z ostatnimi odczytami, sygnałem i statusem |
+| GET | `/api/meters` | Lista liczników z ostatnimi odczytami, sygnałem i statusem. Pole `saved` odróżnia zapisane od wykrytych |
 | GET | `/api/drivers` | Lista dostępnych sterowników (do pola „Sterownik”) |
 | GET | `/api/frames` | Ostatnie surowe ramki radiowe (podgląd/diagnostyka) |
 | GET | `/api/settings` | Bieżące ustawienia urządzenia |
@@ -492,6 +512,12 @@ Najważniejsze endpointy:
 | POST | `/api/meter` | Dodanie/zmiana licznika — `{id, name, driver, key, active}` |
 | GET / DELETE | `/api/meter/<id>` | Odczyt / usunięcie pojedynczego licznika |
 | POST | `/api/restart` | Restart urządzenia |
+
+Od firmware 1.17.162 `/api/meters` zwraca dla wykrytych liczników najwyżej
+jeden rekord (odczyt główny) i nie podaje surowej ramki `raw_hex`. Pełny wpis
+z ramką zwraca `/api/meter/<id>`. Zapisane liczniki mają w liście wszystkie
+rekordy, jak wcześniej. `/api/status` podaje w `diag` liczby `meters_saved`,
+`meters_saved_max`, `meters_discovered` i `meters_discovered_max`.
 
 Przykład — szybki podgląd statusu z komputera:
 
@@ -532,12 +558,10 @@ liczniki diagnostyczne są też dostępne pod
 
 Dwa z tych pól ostrzegają, zanim zauważysz brak odczytów:
 
-- **Liczniki** pokazują zapełnienie listy, np. `37 / 64`. Urządzenie pamięta
-  najwyżej 64 liczniki, a w bloku łapie też liczniki sąsiadów. Gdy lista jest
-  pełna, nowy licznik wchodzi na miejsce wpisu **bez nazwy i klucza**, który
-  milczy ponad 6 godzin — liczniki z nadaną nazwą nigdy nie są
-  usuwane automatycznie. Jeśli pole zrobi się pomarańczowe, usuń z listy
-  liczniki, których nie potrzebujesz.
+- **Liczniki** pokazują obie grupy, np. `zapisane 12 / 64 · wykryte 87`.
+  Pomarańczowe pole oznacza, że zapisanych jest już 64. Usuń wtedy liczniki,
+  których nie potrzebujesz. Grupa wykrytych nie ma takiego ostrzeżenia, bo sama
+  robi miejsce dla nowych liczników.
 - **Odbiór radiowy** pokazuje `✓ OK`, dopóki spływają ramki. Gdy przez pół
   godziny nie przyjdzie żadna, pojawi się `cisza …` — urządzenie samo
   przestawia wtedy odbiornik co 30 minut. Jeśli cisza nie mija, sprawdź
@@ -561,6 +585,15 @@ O instalacji zawsze decydujesz Ty.
 
 Każde wydanie jest **podpisane cyfrowo** — urządzenie odrzuci obraz uszkodzony
 albo podmieniony.
+
+> 💾 **Przed aktualizacją zrób kopię zapasową** (*Ustawienia → Zarządzanie →
+> Eksport konfiguracji*). Firmware starsze niż 1.17.162 przy ponad 23
+> zapisanych licznikach mogło nie zapisać konfiguracji trwale. Klucze AES były
+> wtedy tylko w pamięci roboczej i znikają przy każdym restarcie, także przy
+> aktualizacji. Po takim restarcie liczniki mają nazwy, ale pokazują błąd
+> klucza, a w *Ustawienia → System* pamięć konfiguracji ma stan „odbudowana”.
+> Wczytaj wtedy kopię (*Import konfiguracji*). Od 1.17.162 urządzenie zapisuje
+> trwale wszystkie 64 zapisane liczniki.
 
 > 🌐 **Urządzenie w sieci bez internetu?** Od 6 września 2026 starsze mostki
 > aktualizują się wyłącznie przez OTA, a pliki do pobrania są tylko dla mostków
