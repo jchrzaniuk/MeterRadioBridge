@@ -1037,6 +1037,16 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 > aktualizacji stan główny takiego podzielnika z kluczem może się jednorazowo
 > zmienić, bo teraz zawsze pochodzi z ramki zaszyfrowanej.
 
+> **Podzielniki Techem FHKV wersji 6A** (telegram `TCH 6A/08`, sterownik
+> `fhkvdataiv`) mają dwa klucze od Techem: OMS-S i OMS-A. Krótką ramkę, nadawaną
+> co 4 minuty, szyfruje klucz OMS-S. Długą ramkę, nadawaną tylko w ciągu dnia,
+> szyfruje klucz OMS-A. Urządzenie przyjmuje jeden klucz na licznik i nie
+> rozwija profilu miesięcznego z długiej ramki, więc wpisz klucz **OMS-S**. Z
+> kluczem OMS-A odczyt przestaje się odświeżać w nocy. Od firmware 1.17.158
+> panel nie pokazuje „BŁĄD KLUCZA”, jeśli w ciągu ostatnich 15 minut
+> odszyfrowała się ramka drugiego rodzaju od tego samego licznika. Gdy
+> komunikat świeci dłużej, klucz jest zły albo wpisano OMS-A i jest noc.
+
 ### ⚡ Energia elektryczna
 | Sterownik | Producent / linia | Klucz |
 |---|---|---|
