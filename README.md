@@ -842,6 +842,7 @@ sterowników z dalszej części.
 | 🔥 Gaz | **Elster / Honeywell**, **Diehl** (Aerius) | bez klucza |
 | ⚡ Energia | **ABB** (B23 / B24) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🌡️ HCA | **Sontex** (868) | bez klucza |
+| 🌡️ HCA | **Qundis** (Q Caloric, Caloric 5.5) | jawne: bez; szyfrowane: 🔒 |
 
 > Jeśli Twojego producenta nie ma na liście, a licznik nadaje wg EN 13757 (większość
 > nowych liczników radiowych) — i tak zostanie odczytany na „auto”. Osobne
@@ -880,7 +881,6 @@ Osobne sterowniki w podziale na medium. **Pogrubione = potwierdzone na realnych 
 |---|---|---|
 | **`fhkvdataiii`, `fhkvdataiv`** | Techem FHKV | iii: bez; iv: 🔒 |
 | **`bfw240radio`** | BFW (podzielnik radiowy) | bez klucza |
-| **`qcaloric`** | Qundis (kompakt CI=0x72; Caloric 5.5) | jawne: bez; szyfrowane: 🔒 |
 | **`apatoreitn`** | Apator EITN (podzielnik elektroniczny) | bez klucza |
 | **`apatoreitn40`** | Apator E-ITN 40 (wersje 09 i 0D) | bez klucza |
 
