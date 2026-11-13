@@ -723,6 +723,48 @@ Zanim zbierzesz materiał, zajrzyj do [macierzy zgodności](https://meterradiobr
 tam opisany status — od „potrzebny klucz indywidualny” po „format własnościowy,
 nieobsługiwany” — więc od razu widać, czy brakuje dekodera, czy tylko klucza.
 
+### Najprościej: zbierz ramki w panelu
+
+Od firmware 1.17.180 mostek sam przygotuje plik do zgłoszenia. Zbiera ramki
+jednego licznika, dokłada ich treść po odszyfrowaniu i to, co z nich odczytał.
+Na starszym firmware pobierz ramki ręcznie, jak w części „Jak pobrać ramki”.
+
+Funkcja działa, gdy panel ma hasło (Ustawienia → Dostęp do panelu) i włączone
+REST API (Ustawienia → REST API).
+
+Co musisz zrobić:
+
+1. W zakładce **Liczniki** otwórz licznik, którego dotyczy zgłoszenie.
+2. Jeśli licznik jest zaszyfrowany (kłódka 🔒) i masz do niego klucz, wpisz go
+   w konfiguracji licznika. Bez klucza w pliku będą tylko zaszyfrowane dane.
+3. Kliknij **Zbierz ramki do zgłoszenia** i potwierdź.
+4. Zaczekaj. Postęp widać na górze listy liczników. Mostek kończy po 6 ramkach
+   albo po 20 minutach, zależnie od tego, co nastąpi wcześniej. Licznik, który
+   nadaje rzadko, może nie zdążyć z kompletem. Plik przygotujesz i tak, a
+   zbieranie wcześniej przerwiesz przyciskiem **Zatrzymaj**.
+5. Spisz stan z wyświetlacza albo tarczy licznika.
+6. Kliknij **Przygotuj plik**. Wpisz stan, jednostkę i godzinę odczytu.
+   W polu **Uwagi** podaj producenta i model z naklejki licznika.
+7. Kliknij **Pobierz plik**. Plik `mrb-zgloszenie-<numer>-<data>-<godzina>.json`
+   trafi do folderu Pobrane.
+8. Wyślij plik e-mailem na **pomoc@meterradiobridge.pl**. Adres pod formularzem
+   w panelu otwiera nową wiadomość z wpisanym tematem. Plik dołącz sam.
+
+W pliku są:
+
+- surowe ramki wybranego licznika (najwyżej 6), z godziną odbioru i siłą
+  sygnału,
+- treść tych ramek po odszyfrowaniu, jeśli mostek ma klucz,
+- to, co mostek z ramek odczytał, i rodzaj licznika, który rozpoznał,
+- wersja firmware i statystyki odbioru radia,
+- stan licznika i uwagi, które wpiszesz.
+
+W pliku nie ma klucza AES, nazwy licznika nadanej w panelu, ramek innych
+liczników (na przykład sąsiadów), nazwy sieci Wi-Fi, adresów IP ani haseł.
+
+Zebrane ramki mostek trzyma tylko w pamięci. Restart je kasuje, a przycisk
+**Usuń** usuwa je od razu.
+
 ### Co zebrać
 
 1. **Kilka ramek tego licznika** (im więcej, tym lepiej — najlepiej zebrane
@@ -733,6 +775,9 @@ nieobsługiwany” — więc od razu widać, czy brakuje dekodera, czy tylko klu
    i chcesz, żeby dało się go zdekodować — patrz uwaga o prywatności niżej.
 
 ### Jak pobrać ramki
+
+Ta część dotyczy firmware starszego niż 1.17.180. Na nowszym wystarczy plik
+z panelu (patrz wyżej).
 
 **Sposób A — jedna ramka, najprościej.** Włącz **REST API** (Ustawienia →
 REST API) i pobierz szczegóły licznika — z komputera w tej samej sieci
@@ -763,10 +808,12 @@ się różniły.
 > Jeśli `meterradiobridge.local` nie działa, użyj adresu IP urządzenia (lista klientów
 > routera albo Ustawienia). Gdy panel ma hasło, dodaj `-u użytkownik:hasło`.
 
-### Gdzie zgłosić — załóż issue na GitHubie
+### Gdzie zgłosić — e-mail albo issue na GitHubie
 
-Zgłoszenia o nieczytających się / nierozpoznanych licznikach przyjmujemy jako
-**issue** w publicznym repozytorium projektu:
+Plik z panelu i ramki pobrane ręcznie wyślij e-mailem na
+**pomoc@meterradiobridge.pl**. Taka wiadomość nie jest publiczna.
+
+Jeśli wolisz zgłoszenie publiczne, załóż **issue** w repozytorium projektu:
 
 > 🐙 **[github.com/jchrzaniuk/MeterRadioBridge/issues](https://github.com/jchrzaniuk/MeterRadioBridge/issues)**
 > → przycisk **New issue**. Potrzebne jest darmowe konto GitHub.
