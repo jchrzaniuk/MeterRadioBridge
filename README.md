@@ -354,6 +354,12 @@ użytkownika = brak hasła (każdy w sieci ma dostęp do podglądu i ustawień).
 > urządzenie chwilowo blokuje kolejne (na ok. minutę). To normalne — odczekaj
 > i wpisz poprawne hasło.
 
+> 🛡️ **Ochrona przed obcymi stronami.** Od wersji 1.17.175 urządzenie przyjmuje
+> zmiany z przeglądarki tylko z własnego panelu: zapis ustawień, wgranie firmware,
+> usunięcie licznika i pozostałe. Inna strona otwarta w tej samej przeglądarce
+> niczego nie zmieni, nawet jeśli w drugiej karcie masz otwarty panel po
+> zalogowaniu. Home Assistant, skrypty i `curl` działają jak dotąd.
+
 ### WiFi
 Sieć, z którą łączy się urządzenie. Tu też zmienisz ją na inną (**Skan otoczenia**
 pomaga wybrać). Po zmianie urządzenie się zrestartuje.
@@ -874,6 +880,7 @@ Pobrany plik zawiera zaszyfrowane dane licznika i liczniki diagnostyczne.
 | Dioda mruga „dwa błyski i przerwa”, choć urządzenie ma być w moim Wi-Fi | Nie udało mu się połączyć, więc utworzyło sieć `MeterRadioBridge-Setup` — połącz się z nią i sprawdź nazwę sieci oraz hasło (rozdział 2). Częsta przyczyna: sieć jest na paśmie 5 GHz albo router jest za daleko. |
 | Nie mogę zaktualizować firmware / wyeksportować konfiguracji (błąd 403) | Te funkcje **wymagają ustawionego hasła panelu** — ustaw je w *Ustawienia → Dostęp do panelu* i spróbuj ponownie. |
 | Wgrywam firmware z pliku i dostaję błąd 409 „same_version” | Ta wersja już działa na urządzeniu. Wgraj nowszą. |
+| Panel za serwerem pośredniczącym (np. dostęp z internetu po HTTPS) pokazuje odczyty, ale zapis ustawień kończy się błędem 403 | Ustaw serwer pośredniczący tak, żeby przekazywał do urządzenia nagłówek `Host` albo `X-Forwarded-Host` z adresem, który wpisujesz w przeglądarce, razem z portem, jeśli go podajesz. Po tym nagłówku urządzenie rozpoznaje własny panel. W nginx wystarczy wiersz `proxy_set_header Host $http_host;`. |
 | „Za dużo prób logowania” (błąd 429) | Zbyt wiele błędnych haseł pod rząd — odczekaj ok. minutę i wpisz poprawne hasło. |
 | Słaby sygnał (RSSI ~ −90) | Przesuń urządzenie bliżej liczników / wyżej / z dala od powierzchni metalowych i innych nadajników. |
 | Urządzenie zgubiło Wi-Fi (zmiana routera) | Urządzenie po pewnym czasie samo wystawi awaryjną sieć `MeterRadioBridge-Setup` — połącz się i skonfiguruj nowe Wi-Fi. |
