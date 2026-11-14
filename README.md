@@ -883,13 +883,20 @@ sterowników z dalszej części.
 | 💧 Woda | **Qundis / Zenner** (QWater 5.5) | jawne: bez; szyfrowane: 🔒 |
 | 💧 Woda | **Axioma** (Qalcosonic), Kamstrup, Sensus, Diehl i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 💧 Woda | **Apator Naxom** (OP-04, OP-04-1a, OP-04-1b) | indywidualny 🔒 |
+| 💧 Woda | **Itron** (moduły radiowe ITW, m.in. we wodomierzach Allmess), **GWF** | jawne: bez; szyfrowane: 🔒 |
+| 💧 Woda | **Ultrimis** (telegram z kodem producenta APA), **Maddalena** (EVO868 i starszy moduł) | jawne: bez; szyfrowane: 🔒 |
+| 💧 Woda | **Engelmann** (wodomierz FAW) | jawny: bez klucza; szyfrowanego jeszcze nie odczytujemy |
 | 🔥 Ciepło | **Landis+Gyr** (UltraHeat T550 / UH50) | bez klucza |
 | 🔥 Ciepło | **Qundis** (QHeat 5.5) | jawne: bez; szyfrowane: 🔒 |
+| 🔥 Ciepło | **Engelmann** (SensoStar), **Itron** (m.in. Allmess UltraMaXX z modułem EquaScan hMIU) | jawne: bez; szyfrowane: 🔒 |
+| ❄️ Ciepło i chłód | **Axioma** (Qalcosonic, ciepłomierze i chłodomierze) | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Ciepło | Kamstrup (Multical), Techem / L+G (OEM) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🔥 Gaz | **Elster / Honeywell**, **Diehl** (Aerius) | bez klucza |
+| 🔥 Gaz | **GWF** | jawne: bez; szyfrowane: 🔒 |
 | ⚡ Energia | **ABB** (B23 / B24) i inne EN 13757 | jawne: bez; szyfrowane: 🔒 |
 | 🌡️ HCA | **Sontex** (868) | bez klucza |
 | 🌡️ HCA | **Qundis** (Q Caloric, Caloric 5.5) | jawne: bez; szyfrowane: 🔒 |
+| 📡 Czujniki | **Lansen** (temperatura i wilgotność, czujnik drzwi, impulsator, czujnik dymu) | jawne: bez; szyfrowane: 🔒 |
 
 > Jeśli Twojego producenta nie ma na liście, a licznik nadaje wg EN 13757 (większość
 > nowych liczników radiowych) — i tak zostanie odczytany na „auto”. Osobne
